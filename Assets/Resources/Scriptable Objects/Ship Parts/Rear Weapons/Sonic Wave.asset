@@ -1,0 +1,252 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d460e3ae96da947b856d630864670d, type: 3}
+  m_Name: Sonic Wave
+  m_EditorClassIdentifier: 
+  baseCost: 950
+  inGameUIName: Sonic Wave
+  weaponType: 0
+  projectilePrefabs:
+  - {fileID: 7736352755596976145, guid: aa336b5d2977d7144af8806f755f11e4, type: 3}
+  fireSound: {fileID: 8300000, guid: 475b319f8bf1c4648bf5ad253b46e8d4, type: 3}
+  levelStats:
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 9854459e-ad34-4120-98ba-0bee56e9d5af
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 7fc8688a-0453-41f3-bc7f-4dd1f535fa08
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 2fa28f43-eb21-4ab4-8875-52d7b45c4a18
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: e1207b9e-f4e9-46f6-94c0-a18d66667ab0
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 3559fa57-a75a-4a98-b990-762b56d22c25
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 2d47f1a7-5359-427b-a679-e97ad5883c82
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: d1d685b7-d1b7-4cf1-9c93-778bf747a3dd
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 14f6919a-720e-4ec1-990e-98eeda70f3b7
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 89767e4f-1b67-4070-9023-6ff166123986
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 9420c5cd-cfeb-4b72-b555-8b07d2288ec9
+  - powerCost: 2
+    reloadTime: 0.2
+    damage: 2
+    formation:
+      _locs:
+      - x: 0.5
+        y: 0
+        speed: {x: 6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      - x: -0.5
+        y: 0
+        speed: {x: -6, y: 0}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 0
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 5de0b74b-5f15-417a-a68b-4843e7c84043

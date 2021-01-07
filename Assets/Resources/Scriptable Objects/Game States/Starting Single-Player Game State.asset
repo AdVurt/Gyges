@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbc936c08b9233468e4ab7a17569d0f, type: 3}
+  m_Name: Starting Single-Player Game State
+  m_EditorClassIdentifier: 
+  currentLevel: {fileID: 0}
+  availableLevels:
+  - {fileID: 11400000, guid: e875230dcc1ed94469a18f09f2c38342, type: 2}
+  loadouts:
+  - frontWeapon: {fileID: 11400000, guid: f1960f821af10b4478453845f48491cc, type: 2}
+    rearWeapon: {fileID: 0}
+    generator: {fileID: 11400000, guid: 0b2ac2813e2318244ba9f468c37864fb, type: 2}
+    hull: {fileID: 11400000, guid: 99e34748f56dd414e9363f498e6046fb, type: 2}
+    shield: {fileID: 11400000, guid: 8a1e86c2105fc75468ea4764fc388832, type: 2}
+    specialLeft: {fileID: 0}
+    specialRight: {fileID: 0}
+    frontWeaponLevel: 1
+    rearWeaponLevel: 1
+  totalPoints: 19500
+  shopStock:
+    foldout: 1
+    hulls:
+    - {fileID: 11400000, guid: 99e34748f56dd414e9363f498e6046fb, type: 2}
+    frontWeapons:
+    - {fileID: 11400000, guid: f1960f821af10b4478453845f48491cc, type: 2}
+    - {fileID: 11400000, guid: 4a3416536bb681c45918afa17c73cb47, type: 2}
+    rearWeapons:
+    - {fileID: 11400000, guid: 82a8b390a3062e14893cf908404f9f41, type: 2}
+    - {fileID: 11400000, guid: d7e64b3b931570345826d2cd8a6e7c6c, type: 2}
+    shields:
+    - {fileID: 11400000, guid: 31b491f57e5c8ef4db6e195d54481e24, type: 2}
+    - {fileID: 11400000, guid: 10c91b75a40ffca4aba654f5f6c457a3, type: 2}
+    - {fileID: 11400000, guid: d9087f08d792466458f974f12e917769, type: 2}
+    - {fileID: 11400000, guid: 8a1e86c2105fc75468ea4764fc388832, type: 2}
+    generators:
+    - {fileID: 11400000, guid: 4439884d34797aa4bbc4ea0b83e157c4, type: 2}
+    - {fileID: 11400000, guid: 0b2ac2813e2318244ba9f468c37864fb, type: 2}
+    - {fileID: 11400000, guid: d33e2ec7327c6c64692ad7f177f965f4, type: 2}
+    leftSpecials: []
+    rightSpecials: []

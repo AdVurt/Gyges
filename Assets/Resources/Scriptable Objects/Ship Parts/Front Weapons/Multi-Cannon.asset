@@ -1,0 +1,435 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33f62661e676274c84b7f26aaa6fe80, type: 3}
+  m_Name: Multi-Cannon
+  m_EditorClassIdentifier: 
+  baseCost: 750
+  inGameUIName: Multi-Cannon
+  weaponType: 0
+  projectilePrefabs:
+  - {fileID: 7736352755596976145, guid: 5360ccc3471f49e4f90a56b7b9d130ae, type: 3}
+  - {fileID: 7736352755596976145, guid: d74ecf4317307374ca3b254a66cfa00b, type: 3}
+  fireSound: {fileID: 8300000, guid: 5850f8b29a3f37244a64e5adf2125a88, type: 3}
+  levelStats:
+  - powerCost: 5
+    reloadTime: 0.175
+    damage: 2
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: f9712cec-2dda-4ec0-9bfe-5715f5375657
+  - powerCost: 6
+    reloadTime: 0.175
+    damage: 2
+    formation:
+      _locs:
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: fc06f7d6-5ee1-4ec8-a03e-01d2b9f8210f
+  - powerCost: 7
+    reloadTime: 0.175
+    damage: 3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: 1
+      guid: 0de7f341-d50b-468d-94df-31e9a6af6f10
+  - powerCost: 8
+    reloadTime: 0.175
+    damage: 4
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.4
+        y: -0.2
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.4
+        y: -0.2
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 4441b591-8583-4997-bae9-edaaffe0a7c6
+  - powerCost: 9
+    reloadTime: 0.175
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 6a47e2bf-10e2-450a-b6fd-1da13adb4899
+  - powerCost: 10
+    reloadTime: 0.175
+    damage: 6
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: e9b9dc91-90ba-4814-8050-17c310c41c39
+  - powerCost: 11
+    reloadTime: 0.175
+    damage: 8
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      selectedProjectile: -1
+      guid: 4820c295-6f8e-4cb0-9045-70baaf4a16a1
+  - powerCost: 12
+    reloadTime: 0.175
+    damage: 9
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 2
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 1789afd1-1898-411c-9f03-3053f3c64495
+  - powerCost: 13
+    reloadTime: 0.175
+    damage: 11
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 38d4782c-ad40-4cf2-90f7-6bad037c0361
+  - powerCost: 14
+    reloadTime: 0.175
+    damage: 13
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: -0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.35
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 6166439a-9068-4a9a-b386-6b35bd4a0008
+  - powerCost: 15
+    reloadTime: 0.175
+    damage: 15
+    formation:
+      _locs:
+      - x: -0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: -45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: 0.5
+        y: -0.3
+        speed: {x: 0, y: 15}
+        rotation: 45
+        scale: 1.5
+        damageMultiplier: 2
+        prefabToUse: 1
+      - x: -0.3
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.3
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.15
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.45
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: -20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.45
+        y: -0.1
+        speed: {x: 0, y: 15}
+        rotation: 20
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 108db2a4-0f56-4ca6-b01a-6094ffaea40b

@@ -1,0 +1,360 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d460e3ae96da947b856d630864670d, type: 3}
+  m_Name: Multi-Cannon
+  m_EditorClassIdentifier: 
+  baseCost: 750
+  inGameUIName: Multi-Cannon
+  weaponType: 0
+  projectilePrefabs:
+  - {fileID: 7736352755596976145, guid: 5360ccc3471f49e4f90a56b7b9d130ae, type: 3}
+  - {fileID: 7736352755596976145, guid: 321ad436bd3a71b4ba072db3dec7f41f, type: 3}
+  fireSound: {fileID: 0}
+  levelStats:
+  - powerCost: 0
+    reloadTime: 0.15
+    damage: 5
+    formation:
+      _locs:
+      - x: -0.6
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: -90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 1
+      selectedProjectile: 0
+      guid: 6536bca6-dc45-48e2-ba03-c572546e37ad
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: -0.6
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: -90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.6
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: e81ebfbb-bb14-4b6a-8526-287867b26a8b
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: -0.6
+        y: 0.1
+        speed: {x: 0, y: 15}
+        rotation: -90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.6
+        y: 0.1
+        speed: {x: 0, y: 15}
+        rotation: 90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: -0.6
+        y: -0.15
+        speed: {x: 0, y: 15}
+        rotation: -90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.6
+        y: -0.15
+        speed: {x: 0, y: 15}
+        rotation: 90
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: cac2cc1f-7248-4441-b149-fdb94c78ed02
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: f2d7ac1d-8ae6-44f8-9580-f1ad215ab9a3
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 6754cff9-2fcc-454e-ac09-d53fd9491772
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 3173d2f8-9d1d-4783-bf6e-8491abdbda33
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: c79f6138-6560-4665-aa79-750d4518b808
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 1ceef5e7-a189-4a74-a75c-793294fa4d42
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 2b2c6731-d161-424e-9ca1-b390c2a7c7ab
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 47d56411-6b28-4988-ad67-5ea8f609d527
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: efdc4404-6141-4d97-83e9-d9f3f638b137
+  altLevelStats:
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 41635a94-88ac-4919-942e-aa6c34975185
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 8c1bb38f-2b2b-4381-b1e3-2638fd77a65d
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 08a3ed53-35d9-4e17-84b0-fbdf047d0c98
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 6e5528d4-262f-4ed1-85a5-f7a8b49b1dbb
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 49593864-226d-4697-a5a8-4b60bf2eba75
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 593410c3-9909-4a56-81b9-bc4e0f3def7e
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 9ee6ae32-4ab5-44d0-a155-0eef97ac433a
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 3758decc-90fd-4d52-8492-c0204101cf54
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 193ec2fd-1da6-4ce1-97a9-5fc14679ac81
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 1127e85e-9c2b-47c5-ab4b-7e422ca10f68
+  - powerCost: 0
+    reloadTime: 0.2
+    damage: 5
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: f5abbeb0-6aaa-43c1-b846-f0e354de8aba
+  _hasAlternateFireMode: 0
