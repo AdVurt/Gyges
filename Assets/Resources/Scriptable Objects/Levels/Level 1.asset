@@ -18,4 +18,4 @@ MonoBehaviour:
     _sceneIndex: 1
     _sceneEnabled: 1
   inGameName: Tyrian
-  startingMusic: {fileID: 8300000, guid: 748d4ce46ec65a14bb3c1b2bb45e465b, type: 3}
+  startingMusic: {fileID: 8300000, guid: 048b7709c26bfd449a49b321406b7128, type: 3}

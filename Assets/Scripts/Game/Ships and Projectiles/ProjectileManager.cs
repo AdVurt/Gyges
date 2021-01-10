@@ -59,11 +59,13 @@ namespace Gyges.Game {
             }
         }
         [HideInInspector] public string guid;
+        [HideInInspector] public bool rearWeapon;
 #endif
 
 
         public ProjectileLocation this[int index] {
             get { return _locs[index]; }
+            set { _locs[index] = value; }
         }
 
         public IEnumerator GetEnumerator() {
@@ -75,6 +77,7 @@ namespace Gyges.Game {
 #if UNITY_EDITOR
             selectedProjectile = -1;
             guid = Guid.NewGuid().ToString();
+            rearWeapon = false;
 #endif
         }
 
@@ -142,6 +145,10 @@ namespace Gyges.Game {
             return $"Position: ({x},{y}), Speed: ({speed.x},{speed.y}), Rotation: {rotation}, Scale: {scale}, Prefab: {prefabToUse}, Dmg Multi: {damageMultiplier}";
         }
 
+        /// <summary>
+        /// Constructor for a projectile location that is a clone of another.
+        /// </summary>
+        public ProjectileLocation(ProjectileLocation other) : this(other.x, other.y, other.speed, other.rotation, other.scale, other.prefabToUse, other.damageMultiplier) { }
         public ProjectileLocation(float x, float y, Vector2 speed) : this (x, y, speed, 0f) { }
         public ProjectileLocation(float x, float y) : this(x, y, DefaultSpeed, 0f) { }
         public ProjectileLocation(Vector2 position, Vector2 speed, float rotation) : this(position.x, position.y, speed, rotation) { }

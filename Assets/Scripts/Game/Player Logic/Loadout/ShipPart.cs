@@ -16,7 +16,8 @@ namespace Gyges.Game {
         };
 
         public abstract PartType ShipPartType { get; }
-
+        [Tooltip("The preview image that shows in UI ")]
+        public Texture2D partIcon;
         [Tooltip("The base monetary cost of this part (for levelable weapons, this is the level 1 cost).")]
         public int baseCost;
         [Tooltip("How this part will be represented in in-game UI.")]

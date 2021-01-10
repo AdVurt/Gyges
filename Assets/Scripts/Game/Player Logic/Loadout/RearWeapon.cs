@@ -9,10 +9,12 @@ namespace Gyges.Game {
 
         public WeaponLogic[] altLevelStats = new WeaponLogic[11];
 
-        [SerializeField] private bool _hasAlternateFireMode = default;
+        public bool HasEnoughPower(int level, float currentPower, bool altMode)
+            => (altMode ? altLevelStats : levelStats)[level - 1].powerCost <= currentPower;
+
         public override bool HasAlternateFireMode {
             get {
-                return _hasAlternateFireMode;
+                return true;
             }
         }
 

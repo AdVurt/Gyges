@@ -38,15 +38,18 @@ namespace Gyges.Game {
         [SerializeField] private Image _hullBar = default;
         [SerializeField] private UILoadoutItem _frontWeaponSlot = default;
         [SerializeField] private UILoadoutItem _rearWeaponSlot = default;
-        [SerializeField] private UILoadoutItem _shieldSlot = default;
-        [SerializeField] private UILoadoutItem _generatorSlot = default;
-        [SerializeField] private UILoadoutItem _hullSlot = default;
+        [SerializeField] private Image _rearWeaponAlt1 = default;
+        [SerializeField] private Image _rearWeaponAlt2 = default;
+        [SerializeField] private UILoadoutItem _leftSpecialSlot = default;
+        [SerializeField] private UILoadoutItem _rightSpecialSlot = default;
         [SerializeField] private GameState _gameState = default;
 
         void SubscribeToPlayer() {
             _player.onPowerChanged += UpdatePower;
             _player.onShieldsChanged += UpdateShields;
             _player.GetComponent<Ship>().OnHealthChanged += UpdateHull;
+            _player.onAltModeChanged += UpdateFireMode;
+            UpdateFireMode(_player.AltFireMode);
         }
 
         void UnsubscribeFromPlayer() {
@@ -56,6 +59,7 @@ namespace Gyges.Game {
             _player.onPowerChanged -= UpdatePower;
             _player.onShieldsChanged -= UpdateShields;
             _player.Ship.OnHealthChanged -= UpdateHull;
+            _player.onAltModeChanged -= UpdateFireMode;
         }
 
         /// <summary>
@@ -75,14 +79,24 @@ namespace Gyges.Game {
                 _playerName.text = "Player 1";
                 _frontWeaponSlot.SetItem(_gameState.loadouts[_player.playerNumber].frontWeapon);
                 _rearWeaponSlot.SetItem(_gameState.loadouts[_player.playerNumber].rearWeapon);
-                _shieldSlot.SetItem(_gameState.loadouts[_player.playerNumber].shield);
-                _generatorSlot.SetItem(_gameState.loadouts[_player.playerNumber].generator);
-                _hullSlot.SetItem(_gameState.loadouts[_player.playerNumber].hull);
+                _leftSpecialSlot.SetItem(_gameState.loadouts[_player.playerNumber].specialLeft);
+                _rightSpecialSlot.SetItem(_gameState.loadouts[_player.playerNumber].specialRight);
                 foreach (GameObject obj in _elements) {
                     if (!obj.activeSelf)
                         obj.SetActive(true);
                 }
                 _background.color = _activeColour;
+            }
+        }
+
+        void UpdateFireMode(bool altMode) {
+            if (_gameState.loadouts[_player.playerNumber].rearWeapon != null) {
+                _rearWeaponAlt1.enabled = !altMode;
+                _rearWeaponAlt2.enabled = altMode;
+            }
+            else {
+                _rearWeaponAlt1.enabled = false;
+                _rearWeaponAlt2.enabled = false;
             }
         }
 

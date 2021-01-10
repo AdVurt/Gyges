@@ -5,6 +5,7 @@ using TMPro;
 using Gyges.Utility;
 using UnityEngine.InputSystem;
 using System;
+using System.Text;
 
 namespace Gyges.Game {
 
@@ -17,8 +18,10 @@ namespace Gyges.Game {
         private float _lastKnownVerticalValue = 0f;
         private ShipPart _currentItemInSlot;
         private Camera _mainCamera;
+        private bool _altFire = false;
 
         [SerializeField] private TextMeshProUGUI _funds = default;
+        [SerializeField] private ShopShipPreview _shipPreview = default;
         private AudioSource _audioSource;
 
         [Header("Object and Asset References")]
@@ -50,7 +53,9 @@ namespace Gyges.Game {
         [SerializeField] private PartShopItem[] _partShopItems = default;
         [SerializeField] private TextMeshProUGUI _partShopBack = default;
         [SerializeField] private RectTransform[] _partShopRectTransforms = default;
+        [SerializeField] private TextMeshProUGUI _rearModeText = default;
         private Rect[] _partShopRects;
+        private readonly string[] _bindingDivider = new string[] { " | " };
 
         private bool _enabled = false;
         //Which phase we are currently in. There are two special phases, -1 (not yet in a phase), and 999 (leaving the shop)
@@ -99,8 +104,12 @@ namespace Gyges.Game {
             _input.actions["Vertical"].canceled += OnVerticalNavigate;
             _input.actions["Confirm"].performed += OnConfirm;
             _input.actions["Cancel"].performed += OnCancel;
+            _input.actions["Change Rear Mode"].performed += OnRearModeChanged;
+            _input.actions["Change Rear Mode"].Enable();
             _input.actions["Screen Position"].performed += MouseMoved;
             _input.actions["Screen Position"].Enable();
+
+            _shipPreview.SetAltFireMode(_altFire);
         }
 
         void OnDisable() {
@@ -110,6 +119,7 @@ namespace Gyges.Game {
             _input.actions["Vertical"].canceled -= OnVerticalNavigate;
             _input.actions["Confirm"].performed -= OnConfirm;
             _input.actions["Cancel"].performed -= OnCancel;
+            _input.actions["Change Rear Mode"].performed -= OnRearModeChanged;
             _input.actions["Screen Position"].performed -= MouseMoved;
         }
 
@@ -121,6 +131,43 @@ namespace Gyges.Game {
             if (_SFXTimer > 0f) {
                 _SFXTimer -= Time.deltaTime;
             }
+
+            if (_phase == 1 && _mainMenuSelected == 2) {
+                // Rear weapon
+                _rearModeText.enabled = _currentItemInSlot != null;
+
+                StringBuilder sb = new StringBuilder(_altFire ? "Secondary" : "Primary");
+                sb.AppendLine(" Firing Mode");
+                sb.Append("Change Mode: ");
+
+                string allBindings = _input.actions["Change Rear Mode"].GetBindingDisplayString(InputBinding.MaskByGroup(_input.currentControlScheme));
+
+                bool atLeastOneBinding = false;
+                foreach(string binding in allBindings.Split(_bindingDivider, StringSplitOptions.RemoveEmptyEntries)) {
+                    if (atLeastOneBinding)
+                        sb.Append(", ");
+
+                    sb.Append('[');
+                    switch (binding) {
+                        case "MMB":
+                            sb.Append("Middle Mouse");
+                            break;
+
+                        default:
+                            sb.Append(binding);
+                            break;
+                    }
+                    sb.Append(']');
+                    
+                    atLeastOneBinding = true;
+                }
+
+                _rearModeText.text = sb.ToString();
+            }
+            else {
+                _rearModeText.enabled = false;
+            }
+
         }
 
         public void Enable() {
@@ -234,6 +281,15 @@ namespace Gyges.Game {
                     break;
             }
 
+        }
+
+
+        private void OnRearModeChanged(InputAction.CallbackContext context) {
+            if (_phase == 1 && _mainMenuSelected == 2) {
+                _altFire = !_altFire;
+                _shipPreview.SetAltFireMode(_altFire);
+                RefreshVisuals(true);
+            }
         }
 
         private void OnConfirm(InputAction.CallbackContext context) {
@@ -434,6 +490,7 @@ namespace Gyges.Game {
 
                 int chgAmt = Navigate(ref _lastKnownHorizontalValue, ref correctLevel, 1, canUpdate ? LevelableWeapon.maximumLevel+1 : correctLevel, context.ReadValue<float>(), false);
                 if (chgAmt != 0) {
+                    RefreshItems();
                     shipPreview.Refresh();
                 }
             }
@@ -536,7 +593,7 @@ namespace Gyges.Game {
             }
 
             _fundsRemaining = _gameState.totalPoints - _gameState.loadouts[playerNumber].GetTotalValue();
-            _funds.text = $"Funds: {_fundsRemaining.ToString("###,###,###,###")}";
+            _funds.text = $"Funds: {_fundsRemaining.ToString("###,###,###,##0")}";
 
         }
 

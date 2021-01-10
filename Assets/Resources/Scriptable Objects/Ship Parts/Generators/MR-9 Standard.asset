@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16b92f4b63a57a343a92d2a12a66712e, type: 3}
   m_Name: MR-9 Standard
   m_EditorClassIdentifier: 
+  partIcon: {fileID: 0}
   baseCost: 500
-  inGameUIName: MR-9 Standard
+  inGameUIName: MR-9 Std.
   powerGeneration: 25

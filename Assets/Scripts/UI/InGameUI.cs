@@ -19,11 +19,14 @@ namespace Gyges.Game {
         [Header("Level-Specific")]
         [SerializeField] private Vector3 _playerStartPosition = new Vector3(0f,-4f,0f);
 
-        [Header("Intro (black) screen")]
+        [Header("Overlays")]
         [SerializeField] private GameObject _blackScreen = default;
         private Image _blackScreenImage;
         [SerializeField] private TextMeshProUGUI _topBlackScreenText = default;
         [SerializeField] private TextMeshProUGUI _bottomBlackScreenText = default;
+        [SerializeField] private Image _alertImage = default;
+        // Alert Logic (0 = No alert, 1 = Raising, 2 = Lowering)
+        private bool _alertPhase = false;
 
         [Header("Side panels")]
         [SerializeField] private RectTransform _leftPanel = default;
@@ -71,6 +74,45 @@ namespace Gyges.Game {
             _gameplaySettings.OnStreamerModeUpdate -= UpdateStreamerMode;
         }
 
+        void Update() {
+
+            if (_alertPhase) {
+                float alpha = _alertImage.color.a - Time.deltaTime;
+                if (alpha <= 0f) {
+                    alpha = 0f;
+                    _alertPhase = false;
+                }
+                _alertImage.color = new Color(_alertImage.color.r, _alertImage.color.g, _alertImage.color.b, alpha);
+            }
+            else {
+
+                bool alert = false;
+
+                void SetAlert(Player p) {
+                    if (p.Hull <= 20f && p.Hull <= p.CurrentLoadout.hull.startingHull) {
+                        alert = true;
+                    }
+                }
+                
+                if (_leftHUD.Player != null) {
+                    SetAlert(_leftHUD.Player);
+                }
+                if (!alert && _rightHUD.Player != null) {
+                    SetAlert(_rightHUD.Player);
+                }
+
+                if (alert) {
+                    float alpha = _alertImage.color.a + Time.deltaTime;
+                    if (alpha >= 1f) {
+                        alpha = 1f;
+                        _alertPhase = true;
+                    }
+                    _alertImage.color = new Color(_alertImage.color.r, _alertImage.color.g, _alertImage.color.b, alpha);
+                }
+
+
+            }
+        }
 
         IEnumerator LevelIntro() {
 

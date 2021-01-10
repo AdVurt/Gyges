@@ -7,6 +7,9 @@ namespace Gyges.Game {
 
         public WeaponLogic.WeaponType weaponType;
 
+        [Tooltip("How fast will this oscillate?"), Range(0f, 5f)]
+        public float oscillationSpeed = 0f;
+
         [Tooltip("The prefabs of this weapon's projectiles.")]
         public GameObject[] projectilePrefabs;
 

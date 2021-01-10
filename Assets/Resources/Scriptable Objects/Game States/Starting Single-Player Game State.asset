@@ -27,15 +27,16 @@ MonoBehaviour:
     rearWeaponLevel: 1
   totalPoints: 19500
   shopStock:
-    foldout: 1
     hulls:
     - {fileID: 11400000, guid: 99e34748f56dd414e9363f498e6046fb, type: 2}
     frontWeapons:
     - {fileID: 11400000, guid: f1960f821af10b4478453845f48491cc, type: 2}
     - {fileID: 11400000, guid: 4a3416536bb681c45918afa17c73cb47, type: 2}
+    - {fileID: 11400000, guid: 10ab8fe5684837242bf5798281c9c59e, type: 2}
+    - {fileID: 11400000, guid: 4e59d3b11f2f4144c9784d25cf1ea4bb, type: 2}
     rearWeapons:
-    - {fileID: 11400000, guid: 82a8b390a3062e14893cf908404f9f41, type: 2}
     - {fileID: 11400000, guid: d7e64b3b931570345826d2cd8a6e7c6c, type: 2}
+    - {fileID: 11400000, guid: 82a8b390a3062e14893cf908404f9f41, type: 2}
     shields:
     - {fileID: 11400000, guid: 31b491f57e5c8ef4db6e195d54481e24, type: 2}
     - {fileID: 11400000, guid: 10c91b75a40ffca4aba654f5f6c457a3, type: 2}

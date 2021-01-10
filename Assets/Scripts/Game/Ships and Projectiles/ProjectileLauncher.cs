@@ -9,6 +9,11 @@ namespace Gyges.Game {
 
         public Vector2 originOffset;
         public uint roundsFired = 0;
+        public float oscillationSpeed = 0f;
+        public Vector2 oscillationMinValue = Vector2.left * 0.5f;
+        public Vector2 oscillationMaxValue = Vector2.right * 0.5f;
+
+        public float oscillatedAmount = 0f;
 
         /// <summary>
         /// Fires the provided projectile formation using a single projectile prefab.
@@ -28,9 +33,14 @@ namespace Gyges.Game {
         /// <param name="damage">How much damage each projectile does.</param>
         public void Fire(GameObject[] prefabs, ProjectileFormation formation, float damage) {
 
+            float oscilLerpValue = 0.5f;
+            if (oscillationSpeed > 0f) {
+                oscilLerpValue = (oscillatedAmount >= 1f) ? (2f - oscillatedAmount) : oscillatedAmount;
+            }
+
             foreach (ProjectileLocation loc in formation) {
 
-                Vector3 pos = transform.position + (Vector3)(originOffset + new Vector2(loc.x, loc.y));
+                Vector3 pos = transform.position + (Vector3)(originOffset + new Vector2(loc.x, loc.y)) + (Vector3)Vector2.Lerp(oscillationMinValue, oscillationMaxValue, oscilLerpValue);
                 Quaternion rot = Quaternion.Euler(0f, 0f, -loc.rotation);
 
                 Action<GameObject> preSpawnBehaviour =
@@ -49,6 +59,14 @@ namespace Gyges.Game {
             roundsFired++;
         }
 
+        void Update() {
+            if (oscillationSpeed > 0f) {
+                oscillatedAmount += oscillationSpeed * Time.deltaTime;
+
+                if (oscillatedAmount > 2f)
+                    oscillatedAmount -= 2f;
+            }
+        }
 
 #if UNITY_EDITOR
         void OnDrawGizmosSelected() {

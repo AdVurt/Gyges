@@ -28,6 +28,7 @@ namespace Gyges.Game {
         private PlayerInput _input;
         private MeshRenderer _renderer;
         private Material[] _materials;
+        
         [SerializeField] private AudioSource _frontWeaponAudioSource = default;
         [SerializeField] private AudioSource _rearWeaponAudioSource = default;
 
@@ -35,6 +36,7 @@ namespace Gyges.Game {
         public int playerNumber = 0;
         public float moveSpeed = 20f;
 
+        private bool _altFireMode = false;
         private float _power = 0f;
         private float _shields = 40f;
 
@@ -68,7 +70,17 @@ namespace Gyges.Game {
                 onShieldsChanged?.Invoke(_shields);
             }
         }
-        
+
+        public bool AltFireMode {
+            get {
+                return _altFireMode;
+            }
+            set {
+                _altFireMode = value;
+                onAltModeChanged?.Invoke(_altFireMode);
+            }
+        }
+
         public float Hull {
             get {
                 return Ship.Health;
@@ -93,13 +105,29 @@ namespace Gyges.Game {
         private bool _isFiring = false;
         private Vector3 _lastKnownMousePosition;
         private Vector2 _lastKnownInputDirection;
+        private int _shipFlashHash = Shader.PropertyToID("_Flash");
         private int _shipCollisionLayer;
         private float _shipCollisionTimer = 0f;
+        private bool _shipCollisionFlash = false;
+        private bool ShipCollisionFlash {
+            get {
+                return _shipCollisionFlash;
+            }
+            set {
+                if (_shipCollisionFlash != value) {
+                    _shipCollisionFlash = value;
+                    foreach (Material mat in _materials) {
+                        mat.SetFloat(_shipFlashHash, _shipCollisionFlash ? 1f : 0f);
+                    }
+                }
+            }
+        }
 
         //private int _collisionLayerMask;
 
         public event Action<float> onPowerChanged;
         public event Action<float> onShieldsChanged;
+        public event Action<bool> onAltModeChanged;
         public ProjectileCollisionEvent tookProjectileToShield;
 
         //For optimisation reasons
@@ -161,6 +189,8 @@ namespace Gyges.Game {
             _input.actions["Movement"].performed += UpdateGamepadStickPos;
             _input.actions["Movement"].canceled += UpdateGamepadStickPos;
             _input.actions["Pause"].performed += Pause;
+            _input.actions["Change Rear Mode"].performed += ToggleFireMode;
+            _input.actions["Change Rear Mode"].Enable();
             _lastKnownMousePosition = transform.position;
             Global.OnPausedChanged += Global_OnPausedChanged;
             Cursor.SetCursor(_targetCursor, new Vector2(_targetCursor.width / 2, _targetCursor.height / 2), CursorMode.Auto);
@@ -168,8 +198,9 @@ namespace Gyges.Game {
 
         void OnCollisionStay2D(Collision2D collision) {
 
+            // We have collided with an enemy.
             if ( (collision.collider.gameObject.layer & _shipCollisionLayer) > 0 && _shipCollisionTimer <= 0f) {
-
+                ShipCollisionFlash = true;
                 TakeDamage(3f);
                 _shipCollisionTimer += 0.1f;
 
@@ -204,6 +235,7 @@ namespace Gyges.Game {
             _input.actions["Movement"].performed -= UpdateGamepadStickPos;
             _input.actions["Movement"].canceled -= UpdateGamepadStickPos;
             _input.actions["Pause"].performed -= Pause;
+            _input.actions["Change Rear Mode"].performed -= ToggleFireMode;
             Global.OnPausedChanged -= Global_OnPausedChanged;
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             Cursor.visible = true;
@@ -230,6 +262,9 @@ namespace Gyges.Game {
             _isFiring = false;
         }
 
+        void ToggleFireMode (InputAction.CallbackContext context) {
+            AltFireMode = !AltFireMode;
+        }
 
 
         void FixedUpdate() {
@@ -270,6 +305,13 @@ namespace Gyges.Game {
             if (!Global.enableGameLogic || Global.Paused)
                 return;
 
+            if (CurrentLoadout.frontWeapon != null) {
+                _frontLauncher.oscillationSpeed = CurrentLoadout.frontWeapon.oscillationSpeed;
+            }
+            if (CurrentLoadout.rearWeapon != null) {
+                _rearLauncher.oscillationSpeed = CurrentLoadout.rearWeapon.oscillationSpeed;
+            }
+
             //Fire weapons
             if (_isFiring) {
 
@@ -285,8 +327,9 @@ namespace Gyges.Game {
                 }
 
                 if (CurrentLoadout.rearWeapon != null) {
-                    if (_rearReloadTime <= 0f && CurrentLoadout.rearWeapon.HasEnoughPower(CurrentLoadout.rearWeaponLevel, Power)) {
-                        WeaponLogic logic = CurrentLoadout.rearWeapon.levelStats[CurrentLoadout.rearWeaponLevel - 1];
+                    WeaponLogic[] stats = _altFireMode ? CurrentLoadout.rearWeapon.altLevelStats : CurrentLoadout.rearWeapon.levelStats;
+                    if (_rearReloadTime <= 0f && CurrentLoadout.rearWeapon.HasEnoughPower(CurrentLoadout.rearWeaponLevel, Power, _altFireMode)) {
+                        WeaponLogic logic = stats[CurrentLoadout.rearWeaponLevel - 1];
                         Power -= logic.powerCost;
                         _rearReloadTime = logic.reloadTime;
                         _rearLauncher.Fire(CurrentLoadout.rearWeapon.projectilePrefabs, logic.formation, logic.damage);
@@ -336,9 +379,13 @@ namespace Gyges.Game {
             }
             if (_shipCollisionTimer > 0f) {
                 _shipCollisionTimer -= Time.deltaTime;
+                if (_shipCollisionTimer <= 0f) {
+                    ShipCollisionFlash = false;
+                }
             }
 
         }
+
 
         public void BulletHit(ProjectileCollision coll) {
             if (Shields > 0f) {

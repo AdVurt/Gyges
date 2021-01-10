@@ -211,6 +211,7 @@ namespace Gyges.CustomEditors {
 
             SerializedProperty selectedProjectile = property.FindPropertyRelative("selectedProjectile");
             SerializedProperty locs = property.FindPropertyRelative("_locs");
+            bool rearWeapon = property.FindPropertyRelative("rearWeapon").boolValue;
 
             if (_backgroundColor == Color.black)
                 _backgroundColor = Color.Lerp(EditorGUIUtility.isProSkin ? new Color32(56, 56, 56, 255) : new Color32(194, 194, 194, 255),
@@ -237,7 +238,7 @@ namespace Gyges.CustomEditors {
                         SerializedProperty circleLoc = locs.GetArrayElementAtIndex(i);
                         float circleScale = circleLoc.FindPropertyRelative("scale").floatValue;
                         Vector2 circlePos = rect.center + new Vector2(circleLoc.FindPropertyRelative("x").floatValue, -circleLoc.FindPropertyRelative("y").floatValue) *
-                            50f + Vector2.down * 30f;
+                            50f + (rearWeapon ? Vector2.zero : (Vector2.down * 30f));
                         Rect circleRect = new Rect(circlePos.x - (5f * circleScale), circlePos.y - (5f * circleScale),
                             circleScale * 10f, circleScale * 10f);
 
@@ -313,7 +314,7 @@ namespace Gyges.CustomEditors {
 
                 // Determine the position of the circle.
                 Vector2 position = middle + new Vector2(loc.FindPropertyRelative("x").floatValue, -loc.FindPropertyRelative("y").floatValue) * 50f
-                    + Vector2.down * 30f;
+                    + (rearWeapon ? Vector2.zero : (Vector2.down * 30f));
 
                 // Scale the circle visually by the projectile scale amount.
                 Rect circlePos = new Rect(position.x - (5f * locScale), position.y - (5f * locScale), 10f * locScale, 10f * locScale);

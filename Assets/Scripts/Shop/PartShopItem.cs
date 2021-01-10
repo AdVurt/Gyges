@@ -73,7 +73,7 @@ namespace Gyges.Game {
                 }
             }
             else {
-                _partName.text = part.inGameUIName;
+                _partName.text = part.name;
                 string totalCostText = $"Cost: {part.baseCost.ToString()}";
                 _equippedImage.enabled = equipped;
 

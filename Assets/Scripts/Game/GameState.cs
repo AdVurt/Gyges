@@ -13,12 +13,12 @@ namespace Gyges.Game {
         public int totalPoints = 0;
         public ShopStock shopStock;
 
-        public void SetState(Level currentLevel, Level[] availableLevels, int totalPoints, ShopStock stock, params Loadout[] loadouts) {
+        public void SetState(Level currentLevel, Level[] availableLevels, int totalPoints, ShopStockAsset stock, params Loadout[] loadouts) {
             this.currentLevel = currentLevel;
             this.availableLevels = availableLevels;
             this.loadouts = loadouts;
             this.totalPoints = totalPoints;
-            shopStock = stock;
+            shopStock = (ShopStock)stock.stock.Clone();
         }
 
         /// <summary>

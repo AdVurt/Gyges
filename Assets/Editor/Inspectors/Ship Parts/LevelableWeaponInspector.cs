@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using Gyges.Game;
@@ -7,6 +9,8 @@ using Gyges.Game;
 namespace Gyges.CustomEditors {
 
     public abstract class LevelableWeaponInspector : ShipPartInspector {
+
+        #region Fields -------------------------------------------
 
         private static ProjectileFormation? _formationClipboard = null;
 
@@ -22,6 +26,7 @@ namespace Gyges.CustomEditors {
 
         private LevelableWeapon _target;
         private SerializedProperty _weaponType;
+        private SerializedProperty _oscillationSpeed;
         private SerializedProperty _projectilePrefabs;
         private SerializedProperty _levelStats;
         private SerializedProperty _fireSound;
@@ -36,10 +41,13 @@ namespace Gyges.CustomEditors {
         private int[] _prefabIndexes;
         private Color[] _prefabColours;
 
+        #endregion
+
         new void OnEnable() {
             base.OnEnable();
             _target = (LevelableWeapon)target;
             _weaponType = serializedObject.FindProperty("weaponType");
+            _oscillationSpeed = serializedObject.FindProperty("oscillationSpeed");
 
             _canHaveAltStats = _target.ShipPartType == ShipPart.PartType.RearWeapon;
             if (_canHaveAltStats) {
@@ -78,6 +86,9 @@ namespace Gyges.CustomEditors {
             EditorGUILayout.LabelField("Levelable Weapon-Specific Data", EditorStyles.boldLabel);
             serializedObject.Update();
             EditorGUILayout.PropertyField(_weaponType);
+            if ((WeaponLogic.WeaponType)_weaponType.enumValueIndex == WeaponLogic.WeaponType.OscillatingLaunch) {
+                EditorGUILayout.PropertyField(_oscillationSpeed);
+            }
 
             bool madeChangesToArray = false;
             if (_projectilePrefabs.arraySize == 0) {
@@ -136,6 +147,7 @@ namespace Gyges.CustomEditors {
                     _altMode = GUILayout.Toggle(_altMode, "Alternate Mode");
                     if (EditorGUI.EndChangeCheck()) {
                         _levelStats = serializedObject.FindProperty(_altMode ? "altLevelStats" : "levelStats");
+                        GUI.FocusControl("");
                     }
                     GUILayout.FlexibleSpace();
                 }
@@ -188,10 +200,15 @@ namespace Gyges.CustomEditors {
                     else {
                         menu.AddDisabledItem(new GUIContent("Paste"));
                     }
-
                     menu.AddSeparator("");
-
                     menu.AddItem(new GUIContent("Copy Formation to all Levels"), false, CopyFormationToAllLevels);
+                    if (_target.HasAlternateFireMode) {
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent("Sync Power Cost (all levels)"), false, SyncPowerCosts);
+                        menu.AddItem(new GUIContent("Sync Reload Time (all levels)"), false, SyncReloadTimes);
+                        menu.AddItem(new GUIContent("Sync Damage (all levels)"), false, SyncDamage);
+                        menu.AddItem(new GUIContent("Sync Formation (all levels)"), false, SyncFormations);
+                    }
 
                     menu.DropDown(ctRect);
                 }
@@ -199,6 +216,8 @@ namespace Gyges.CustomEditors {
             }
             // This calls the ProjectileFormationPropertyDrawer drawer.
             SerializedProperty currentLevelFormation = _levelStats.GetArrayElementAtIndex(_level);
+            currentLevelFormation.FindPropertyRelative("formation").FindPropertyRelative("rearWeapon").boolValue = _target.ShipPartType == ShipPart.PartType.RearWeapon;
+
             EditorGUILayout.PropertyField(currentLevelFormation);
 
             // Draw the prefab selector field above the drawer grid if we have at least two prefabs and a projectile is selected.
@@ -236,111 +255,87 @@ namespace Gyges.CustomEditors {
 
             EditorGUILayout.Space(17f);
             EditorGUILayout.LabelField("Mass updates", EditorStyles.boldLabel);
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massPowerCostUpdate = EditorGUILayout.FloatField("Power cost", massPowerCostUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        log.powerCost = massPowerCostUpdate;
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massReloadTimeUpdate = EditorGUILayout.FloatField("Reload time", massReloadTimeUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        log.reloadTime = massReloadTimeUpdate;
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massDamageUpdate = EditorGUILayout.FloatField("Damage", massDamageUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        log.damage = massDamageUpdate;
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massSpeedUpdate = EditorGUILayout.Vector2Field("Projectile speed", massSpeedUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                        for (int i = 0; i < log.formation.Size; i++) {
-                            locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, massSpeedUpdate, log.formation[i].rotation);
-                        }
-                        log.formation = new ProjectileFormation(locs);
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massRotationUpdate = EditorGUILayout.FloatField("Rotation", massRotationUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                        for (int i = 0; i < log.formation.Size; i++) {
-                            locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, log.formation[i].speed, massRotationUpdate);
-                        }
-                        log.formation = new ProjectileFormation(locs);
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massScaleUpdate = EditorGUILayout.FloatField("Scale", massScaleUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                        for (int i = 0; i < log.formation.Size; i++) {
-                            locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, log.formation[i].speed, log.formation[i].rotation, massScaleUpdate);
-                        }
-                        log.formation = new ProjectileFormation(locs);
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massPrefabUpdate = EditorGUILayout.IntField("Prefab ID", massPrefabUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                        for (int i = 0; i < log.formation.Size; i++) {
-                            locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, log.formation[i].speed, log.formation[i].rotation, log.formation[i].scale, massPrefabUpdate);
-                        }
-                        log.formation = new ProjectileFormation(locs);
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-
-            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
-                massDamageMultiplierUpdate = EditorGUILayout.FloatField("Damage Multiplier", massDamageMultiplierUpdate);
-                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
-                    foreach (WeaponLogic log in _target.levelStats) {
-                        ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                        for (int i = 0; i < log.formation.Size; i++) {
-                            locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, log.formation[i].speed, log.formation[i].rotation, log.formation[i].scale, log.formation[i].prefabToUse, massDamageMultiplierUpdate);
-                        }
-                        log.formation = new ProjectileFormation(locs);
-                    }
-                    EditorUtility.SetDirty(_target);
-                }
-            }
+            MassUpdate("Power Cost","powerCost", ref massPowerCostUpdate, EditorGUILayout.FloatField, false);
+            MassUpdate("Reload Time", "reloadTime", ref massReloadTimeUpdate, EditorGUILayout.FloatField, false);
+            MassUpdate("Damage", "damage", ref massDamageUpdate, EditorGUILayout.FloatField, false);
+            MassUpdate("Projectile Speed", "speed", ref massSpeedUpdate, EditorGUILayout.Vector2Field, true);
+            MassUpdate("Rotation", "rotation", ref massRotationUpdate, EditorGUILayout.FloatField, true);
+            MassUpdate("Scale", "scale", ref massScaleUpdate, EditorGUILayout.FloatField, true);
+            MassUpdate("Prefab ID", "prefabToUse", ref massPrefabUpdate, EditorGUILayout.IntField, true);
+            MassUpdate("Damage Multiplier", "damageMultiplier", ref massDamageMultiplierUpdate, EditorGUILayout.FloatField, true);
 
         }
 
+        /// <summary>
+        /// Updates all items in the current stats with the provided mass update information.
+        /// </summary>
+        /// <typeparam name="T">The type of the field to update.</typeparam>
+        /// <param name="fieldName">The user-facing name of the field to update.</param>
+        /// <param name="internalFieldName">The actual name of the field to update.</param>
+        /// <param name="trackingField">The field keeping track of the mass update value.</param>
+        /// <param name="fieldFunction">The EditorGUILayout.xField function for this field.</param>
+        /// <param name="formationLevel">Is this a formation-level field?</param>
+        private void MassUpdate<T>(string fieldName, string internalFieldName, ref T trackingField, Func<string,T,GUILayoutOption[],T> fieldFunction, bool formationLevel) {
+            using (EditorGUILayout.HorizontalScope sc = new EditorGUILayout.HorizontalScope()) {
+                trackingField = fieldFunction(fieldName, trackingField, new GUILayoutOption[0]);
 
+
+                if (GUILayout.Button("Go", GUILayout.MaxWidth(40))) {
+                    bool useAlt = _target.ShipPartType == ShipPart.PartType.RearWeapon && _altMode;
+                    WeaponLogic[] statsToUpdate = (_target.ShipPartType == ShipPart.PartType.RearWeapon && _altMode) ? ((RearWeapon)_target).altLevelStats : _target.levelStats;
+
+                    for (int i = 0; i < LevelableWeapon.maximumLevel; i++) {
+                        if (formationLevel) {
+
+                            for (int j = 0; j < statsToUpdate[i].formation.Size; j++) {
+                                object projLoc = statsToUpdate[i].formation[j];
+                                projLoc.GetType().GetField(internalFieldName).SetValue(projLoc, trackingField);
+                                statsToUpdate[i].formation[j] = (ProjectileLocation)projLoc;
+                            }
+
+                        }
+                        else {
+                            object si = statsToUpdate[i];
+                            si.GetType().GetField(internalFieldName).SetValue(si, trackingField);
+                            statsToUpdate[i] = (WeaponLogic)si;
+                        }
+                    }
+
+                    EditorUtility.SetDirty(_target);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Synchronises the power costs between the primary and alternate firing formations at all levels.
+        /// </summary>
+        private void SyncPowerCosts() => SyncToOtherFireMode("powerCost");
+
+        /// <summary>
+        /// Synchronises the reload times between the primary and alternate firing formations at all levels.
+        /// </summary>
+        private void SyncReloadTimes() => SyncToOtherFireMode("reloadTime");
+
+        /// <summary>
+        /// Synchronises the damage between the primary and alternate firing formations at all levels.
+        /// </summary>
+        private void SyncDamage() => SyncToOtherFireMode("damage");
+
+        /// <summary>
+        /// Synchronises all formations between the primary and alternate firing formations at all levels.
+        /// </summary>
+        private void SyncFormations() => SyncToOtherFireMode("formation");
+
+        private void SyncToOtherFireMode(string fieldName) {
+            ref WeaponLogic[] source = ref (_target.ShipPartType == ShipPart.PartType.RearWeapon && _altMode) ? ref ((RearWeapon)_target).altLevelStats : ref _target.levelStats;
+            ref WeaponLogic[] destination = ref (_target.ShipPartType == ShipPart.PartType.RearWeapon && _altMode) ? ref _target.levelStats : ref ((RearWeapon)_target).altLevelStats;
+            FieldInfo field = typeof(WeaponLogic).GetField(fieldName);
+            
+            for (int i = 0; i < source.Length; i++) {
+                field.SetValue(destination[i], field.GetValue(source[i]));
+            }
+        }
 
         public override bool HasPreviewGUI() => true;
 
@@ -359,7 +354,9 @@ namespace Gyges.CustomEditors {
         }
 
         private void CopyFormation() {
-            _formationClipboard = _target.levelStats[_level].formation;
+            _formationClipboard = (_target.ShipPartType == ShipPart.PartType.RearWeapon) ?
+                (_altMode ? ((RearWeapon)_target).altLevelStats[_level].formation : ((RearWeapon)_target).levelStats[_level].formation) :
+                _target.levelStats[_level].formation;
         }
 
         private void PasteFormation() {

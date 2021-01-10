@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 722b6e32e3052314cad6185b1c8fb0ae, type: 3}
   m_Name: High Energy Shield
   m_EditorClassIdentifier: 
+  partIcon: {fileID: 0}
   baseCost: 1000
-  inGameUIName: High Energy Shield
+  inGameUIName: H. Energy
   shieldMax: 40
   regenRate: 10
   costPerSecond: 40

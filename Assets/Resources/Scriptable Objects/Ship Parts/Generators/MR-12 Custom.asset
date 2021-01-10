@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16b92f4b63a57a343a92d2a12a66712e, type: 3}
   m_Name: MR-12 Custom
   m_EditorClassIdentifier: 
+  partIcon: {fileID: 0}
   baseCost: 5000
-  inGameUIName: MR-12 Custom
+  inGameUIName: MR-12 Cust.
   powerGeneration: 80

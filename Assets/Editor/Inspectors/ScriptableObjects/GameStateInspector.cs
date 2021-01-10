@@ -16,7 +16,7 @@ namespace Gyges.CustomEditors {
         private SerializedProperty _loadouts;
         private SerializedProperty _totalPoints;
         private SerializedProperty _shopStock;
-
+        private Editor _stockEditor;
 
         void OnEnable() {
             _target = (GameState)target;
@@ -59,6 +59,12 @@ namespace Gyges.CustomEditors {
                     _target.CopyFrom(copyFrom);
                     EditorUtility.SetDirty(_target);
                 }
+            }
+
+            ShopStockAsset importFrom = (ShopStockAsset)EditorGUILayout.ObjectField(new GUIContent("Copy Stock From"), null, typeof(ShopStockAsset), false);
+            if (importFrom != null) {
+                _target.shopStock = (ShopStock)importFrom.stock.Clone();
+                EditorUtility.SetDirty(_target);
             }
 
             serializedObject.ApplyModifiedProperties();

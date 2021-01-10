@@ -1,0 +1,223 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33f62661e676274c84b7f26aaa6fe80, type: 3}
+  m_Name: Vulcan Cannon
+  m_EditorClassIdentifier: 
+  partIcon: {fileID: 0}
+  baseCost: 600
+  inGameUIName: Vulcan
+  weaponType: 1
+  oscillationSpeed: 4
+  projectilePrefabs:
+  - {fileID: 7736352755596976145, guid: 9c65487dd431b3c4d84920b43d550915, type: 3}
+  fireSound: {fileID: 8300000, guid: 5850f8b29a3f37244a64e5adf2125a88, type: 3}
+  levelStats:
+  - powerCost: 1
+    reloadTime: 0.1
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 0c5bc47b-2b71-474c-865e-a07fb98c6abe
+      rearWeapon: 0
+  - powerCost: 1
+    reloadTime: 0.09
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: e42cb086-abbe-4b07-a5a8-c6d4011e6a33
+      rearWeapon: 0
+  - powerCost: 2
+    reloadTime: 0.08
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 8fe37914-936c-477d-b5d0-5ed8cd14a273
+      rearWeapon: 0
+  - powerCost: 2
+    reloadTime: 0.07
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 28e92ab1-2be3-4fde-8109-a1a527aa80b4
+      rearWeapon: 0
+  - powerCost: 3
+    reloadTime: 0.06
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 638dea3a-8795-4117-9713-aa517e8ae476
+      rearWeapon: 0
+  - powerCost: 3
+    reloadTime: 0.05
+    damage: 0.3
+    formation:
+      _locs:
+      - x: 0
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 8d642550-a00e-4393-98a0-d7294ee23f01
+      rearWeapon: 0
+  - powerCost: 4
+    reloadTime: 0.1
+    damage: 0.3
+    formation:
+      _locs:
+      - x: -0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: d8d6e813-c4d2-4597-82d9-1cca291a7398
+      rearWeapon: 0
+  - powerCost: 4
+    reloadTime: 0.09
+    damage: 0.3
+    formation:
+      _locs:
+      - x: -0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 483b15f9-9262-4a68-9e4c-7ab0e580a1c9
+      rearWeapon: 0
+  - powerCost: 5
+    reloadTime: 0.08
+    damage: 0.3
+    formation:
+      _locs:
+      - x: -0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: ad5a4920-8578-4520-96a4-63c3c709b1c1
+      rearWeapon: 0
+  - powerCost: 5
+    reloadTime: 0.07
+    damage: 0.3
+    formation:
+      _locs:
+      - x: -0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: 59099476-82e6-45ea-ae9c-3e7113061b83
+      rearWeapon: 0
+  - powerCost: 6
+    reloadTime: 0.06
+    damage: 0.3
+    formation:
+      _locs:
+      - x: -0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      - x: 0.05
+        y: 0
+        speed: {x: 0, y: 15}
+        rotation: 0
+        scale: 1
+        damageMultiplier: 1
+        prefabToUse: 0
+      selectedProjectile: -1
+      guid: df32f990-f16e-477c-91ba-faa0d1d7b442
+      rearWeapon: 0

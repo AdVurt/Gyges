@@ -10,8 +10,7 @@ namespace Gyges.CustomEditors {
     public class ShopStockDrawer : PropertyDrawer {
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            if (!property.FindPropertyRelative("foldout").boolValue)
-                return EditorGUIUtility.singleLineHeight;
+
 
             int items = 8; //By default, show eight - the label plus seven item categories.
             items += property.FindPropertyRelative("hulls").arraySize;
@@ -33,53 +32,41 @@ namespace Gyges.CustomEditors {
             Rect pos = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
             float height = EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty foldoutProperty = property.FindPropertyRelative("foldout");
-            bool foldout = EditorGUI.Foldout(pos, foldoutProperty.boolValue, label);
-            foldoutProperty.boolValue = foldout;
 
-            if (foldout) {
+            SerializedProperty hulls = property.FindPropertyRelative("hulls");
+            SerializedProperty frontWeapons = property.FindPropertyRelative("frontWeapons");
+            SerializedProperty rearWeapons = property.FindPropertyRelative("rearWeapons");
+            SerializedProperty shields = property.FindPropertyRelative("shields");
+            SerializedProperty generators = property.FindPropertyRelative("generators");
+            SerializedProperty leftSpecials = property.FindPropertyRelative("leftSpecials");
+            SerializedProperty rightSpecials = property.FindPropertyRelative("rightSpecials");
 
-                int oldIndent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel++;
+            EditorGUI.LabelField(pos, "Hulls");
+            DrawItems(hulls, ref pos);
 
-                SerializedProperty hulls = property.FindPropertyRelative("hulls");
-                SerializedProperty frontWeapons = property.FindPropertyRelative("frontWeapons");
-                SerializedProperty rearWeapons = property.FindPropertyRelative("rearWeapons");
-                SerializedProperty shields = property.FindPropertyRelative("shields");
-                SerializedProperty generators = property.FindPropertyRelative("generators");
-                SerializedProperty leftSpecials = property.FindPropertyRelative("leftSpecials");
-                SerializedProperty rightSpecials = property.FindPropertyRelative("rightSpecials");
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Front Weapons");
+            DrawItems(frontWeapons, ref pos);
 
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Hulls");
-                DrawItems(hulls, ref pos);
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Rear Weapons");
+            DrawItems(rearWeapons, ref pos, true);
 
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Front Weapons");
-                DrawItems(frontWeapons, ref pos);
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Shields");
+            DrawItems(shields, ref pos);
 
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Rear Weapons");
-                DrawItems(rearWeapons, ref pos, true);
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Generators");
+            DrawItems(generators, ref pos);
 
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Shields");
-                DrawItems(shields, ref pos);
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Left Specials");
+            DrawItems(leftSpecials, ref pos, true);
 
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Generators");
-                DrawItems(generators, ref pos);
-
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Left Specials");
-                DrawItems(leftSpecials, ref pos, true);
-
-                pos.y += EditorGUIUtility.singleLineHeight + 2;
-                EditorGUI.LabelField(pos, "Right Specials");
-                DrawItems(rightSpecials, ref pos, true);
-
-                EditorGUI.indentLevel = oldIndent;
-            }
+            pos.y += EditorGUIUtility.singleLineHeight + 2;
+            EditorGUI.LabelField(pos, "Right Specials");
+            DrawItems(rightSpecials, ref pos, true);
 
             if (EditorGUI.EndChangeCheck())
                 property.serializedObject.ApplyModifiedProperties();

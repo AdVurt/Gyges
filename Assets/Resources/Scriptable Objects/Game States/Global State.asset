@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afbc936c08b9233468e4ab7a17569d0f, type: 3}
   m_Name: Global State
   m_EditorClassIdentifier: 
-  currentLevel: {fileID: 0}
+  currentLevel: {fileID: 11400000, guid: e875230dcc1ed94469a18f09f2c38342, type: 2}
   availableLevels:
   - {fileID: 11400000, guid: e875230dcc1ed94469a18f09f2c38342, type: 2}
   loadouts:
@@ -23,20 +23,24 @@ MonoBehaviour:
     shield: {fileID: 11400000, guid: 8a1e86c2105fc75468ea4764fc388832, type: 2}
     specialLeft: {fileID: 0}
     specialRight: {fileID: 0}
-    frontWeaponLevel: 1
+    frontWeaponLevel: 5
     rearWeaponLevel: 1
-  totalPoints: 1000000
+  totalPoints: 19500
   shopStock:
-    foldout: 1
     hulls:
     - {fileID: 11400000, guid: 99e34748f56dd414e9363f498e6046fb, type: 2}
     frontWeapons:
     - {fileID: 11400000, guid: f1960f821af10b4478453845f48491cc, type: 2}
     - {fileID: 11400000, guid: 4a3416536bb681c45918afa17c73cb47, type: 2}
+    - {fileID: 11400000, guid: 10ab8fe5684837242bf5798281c9c59e, type: 2}
+    - {fileID: 11400000, guid: 4e59d3b11f2f4144c9784d25cf1ea4bb, type: 2}
     rearWeapons:
-    - {fileID: 11400000, guid: 82a8b390a3062e14893cf908404f9f41, type: 2}
     - {fileID: 11400000, guid: d7e64b3b931570345826d2cd8a6e7c6c, type: 2}
+    - {fileID: 11400000, guid: 82a8b390a3062e14893cf908404f9f41, type: 2}
     shields:
+    - {fileID: 11400000, guid: 31b491f57e5c8ef4db6e195d54481e24, type: 2}
+    - {fileID: 11400000, guid: 10c91b75a40ffca4aba654f5f6c457a3, type: 2}
+    - {fileID: 11400000, guid: d9087f08d792466458f974f12e917769, type: 2}
     - {fileID: 11400000, guid: 8a1e86c2105fc75468ea4764fc388832, type: 2}
     generators:
     - {fileID: 11400000, guid: 4439884d34797aa4bbc4ea0b83e157c4, type: 2}

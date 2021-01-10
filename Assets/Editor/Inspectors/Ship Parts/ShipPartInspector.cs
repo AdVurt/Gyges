@@ -9,12 +9,14 @@ namespace Gyges.CustomEditors {
 
         protected SerializedProperty _script;
         protected SerializedProperty _readyToPlay;
+        protected SerializedProperty _partIcon;
         protected SerializedProperty _baseCost;
         protected SerializedProperty _inGameUIName;
 
         public void OnEnable() {
             _script = serializedObject.FindProperty("m_Script");
             _readyToPlay = serializedObject.FindProperty("readyToPlay");
+            _partIcon = serializedObject.FindProperty("partIcon");
             _baseCost = serializedObject.FindProperty("baseCost");
             _inGameUIName = serializedObject.FindProperty("inGameUIName");
         }
@@ -30,6 +32,7 @@ namespace Gyges.CustomEditors {
             GUI.enabled = true;
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Standard Item Data", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_partIcon);
             EditorGUILayout.PropertyField(_baseCost);
             EditorGUILayout.PropertyField(_inGameUIName);
             EditorGUILayout.Space();

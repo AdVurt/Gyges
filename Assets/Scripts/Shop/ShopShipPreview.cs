@@ -34,6 +34,7 @@ namespace Gyges.Game {
         private Generator _generator;
         private float _power = 0f;
 
+        private bool _altFire = false;
         public bool movingOut = false;
         private float _moveSpeed = 0f;
 
@@ -94,6 +95,13 @@ namespace Gyges.Game {
 
                     if (_frontWeapon != null) {
                         _frontTimer -= Time.deltaTime;
+                        if (_frontWeapon.weaponType == WeaponLogic.WeaponType.OscillatingLaunch) {
+                            _frontLauncher.oscillationSpeed = _frontWeapon.oscillationSpeed;
+                        }
+                        else {
+                            _frontLauncher.oscillationSpeed = 0f;
+                            _frontLauncher.oscillatedAmount = 0f;
+                        }
                         if (_frontTimer <= 0f) {
 
                             if (_frontWeapon.HasEnoughPower(_frontWeaponLevel, _power)) {
@@ -111,9 +119,19 @@ namespace Gyges.Game {
 
                     if (_rearWeapon != null) {
                         _rearTimer -= Time.deltaTime;
+                        WeaponLogic[] stats = _altFire ? _rearWeapon.altLevelStats : _rearWeapon.levelStats;
+
+                        if (_rearWeapon.weaponType == WeaponLogic.WeaponType.OscillatingLaunch) {
+                            _rearLauncher.oscillationSpeed = _rearWeapon.oscillationSpeed;
+                        }
+                        else {
+                            _rearLauncher.oscillationSpeed = 0f;
+                            _rearLauncher.oscillatedAmount = 0f;
+                        }
+                        _rearLauncher.oscillationSpeed = _rearWeapon.weaponType == WeaponLogic.WeaponType.OscillatingLaunch ? _rearWeapon.oscillationSpeed : 0f;
                         if (_rearTimer <= 0f) {
-                            if (_rearWeapon.HasEnoughPower(_rearWeaponLevel, _power)) {
-                                WeaponLogic logic = _rearWeapon.levelStats[_rearWeaponLevel - 1];
+                            if (_rearWeapon.HasEnoughPower(_rearWeaponLevel, _power, _altFire)) {
+                                WeaponLogic logic = stats[_rearWeaponLevel - 1];
                                 _rearLauncher.Fire(_rearWeapon.projectilePrefabs, logic.formation, logic.damage);
                                 _rearTimer += logic.reloadTime;
                                 _power -= logic.powerCost;
@@ -200,6 +218,12 @@ namespace Gyges.Game {
 
             _refreshedEver = true;
         }
+
+        public void SetAltFireMode(bool value) {
+            _altFire = value;
+            Refresh();
+        }
+
     }
 
 }
