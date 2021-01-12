@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1b4d733e813b7d4db21e4f78569ffe7, type: 3}
-  m_Name: Fodder Enemy Bounty
+  m_Script: {fileID: 11500000, guid: c1a379d26a25df74798c294700303bb3, type: 3}
+  m_Name: Blue Split Fighter Part Health
   m_EditorClassIdentifier: 
-  value: 50
+  value: 10

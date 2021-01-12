@@ -15,17 +15,25 @@ namespace Gyges.Game {
 
         private Collider2D _collider;
         private Ship _ship;
-        private Material _material;
+        private Material[] _materials;
         private static readonly int _dissolveAmountMatFloat = Shader.PropertyToID("_DissolveAmount");
 
         [Header("Game Data")]
         public FloatReference startingHealth;
         public IntReference bounty;
-        
+        public GameObject[] lootPrefabs = new GameObject[0];
+        public LootFormation lootFormation = new LootFormation();
 
         private float _dissolveAmount = 0f;
         [Header("Visual")]
         [SerializeField] [Range(1f,10f)] private float _dissolveSpeed = 4f;
+        [SerializeField, Tooltip("Renderers that should be affected by this other than the one directly attached to this object (for example, child object renderers).")] private Renderer[] _additionalRenderers = new Renderer[0];
+
+        public Renderer[] AdditionalRenderers {
+            get {
+                return _additionalRenderers;
+            }
+        }
 
         public event Action<IWaveObjectDestroyEventParams> OnDestroy;
 
@@ -33,13 +41,17 @@ namespace Gyges.Game {
             _ship = GetComponent<Ship>();
             _ship.Health = startingHealth.Value;
             _collider = GetComponent<Collider2D>();
-            _material = GetComponent<Renderer>().material;
+            _materials = GetComponent<Renderer>().materials;
             _ship.OnDeath += _ship_OnDeath;
         }
 
         private void _ship_OnDeath(GameObj obj) {
             _collider.enabled = false;
             StartCoroutine(DissolveOut());
+            foreach (Enemy enemy in GetComponentsInChildren<Enemy>()) {
+                if (enemy != this)
+                    enemy._ship_OnDeath(obj);
+            }
         }
 
         public void TakeDamageFromCollision(ProjectileCollision coll) {
@@ -48,17 +60,40 @@ namespace Gyges.Game {
 
         /// <summary>
         /// Instantly destroys this game object, calling the OnDestroy event in the process.
+        /// Awards this enemy's bounty value as points, and spawns any loot this enemy has been assigned.
         /// </summary>
         /// <param name="killedByPlayer">Was it killed by the player? (For example, should points be awarded?)</param>
         public void Kill(bool killedByPlayer = true) {
-            OnDestroy?.Invoke(new IWaveObjectDestroyEventParams() { waveObject = this, killedByPlayer = killedByPlayer });
+            OnDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, killedByPlayer, bounty.Value));
+
+            // Spawn any loot.
+            if (killedByPlayer && lootPrefabs.Length > 0 && lootFormation.Count > 0) {
+
+                for (int i = 0; i < lootFormation.Count; i++) {
+                    LootLocation loc = lootFormation[i];
+                    if (loc.prefabToUse >= lootPrefabs.Length)
+                        throw new IndexOutOfRangeException($"Enemy {name}, location {i} has a prefab ID of {loc.prefabToUse}, but the maximum is {lootPrefabs.Length-1}.");
+                    if (lootPrefabs[loc.prefabToUse] == null)
+                        throw new NullReferenceException($"Enemy {name}, prefab {loc.prefabToUse} is null.");
+                    Instantiate(lootPrefabs[loc.prefabToUse], transform.position + new Vector3(loc.x,loc.y), Quaternion.identity).GetComponent<Loot>().velocity = loc.speed;
+                }
+
+            }
+
             Destroy(gameObject);
         }
 
         private IEnumerator DissolveOut(bool killedByPlayer = true) {
             while (_dissolveAmount < 1f) {
                 _dissolveAmount += _dissolveSpeed * Time.deltaTime;
-                _material.SetFloat(_dissolveAmountMatFloat, _dissolveAmount);
+                foreach(Material mat in _materials) {
+                    mat.SetFloat(_dissolveAmountMatFloat, _dissolveAmount);
+                }
+                foreach (Renderer ren in _additionalRenderers) {
+                   foreach(Material mat in ren.materials) {
+                        mat.SetFloat(_dissolveAmountMatFloat, _dissolveAmount);
+                    }
+                }
                 yield return new WaitForEndOfFrame();
             }
             Kill(killedByPlayer);

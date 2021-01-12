@@ -14,11 +14,11 @@ namespace Gyges.Game {
             }
             set {
                 if (_player != null && value != _player) {
-                    UnsubscribeFromPlayer();
+                    UnsubscribeFromEvents();
                 }
                 _player = value;
                 if (_player != null) {
-                    SubscribeToPlayer();
+                    SubscribeToEvents();
                     UpdatePower(_player.Power);
                     UpdateShields(_player.Shields);
                     UpdateHull(_player.Hull);
@@ -43,16 +43,18 @@ namespace Gyges.Game {
         [SerializeField] private UILoadoutItem _leftSpecialSlot = default;
         [SerializeField] private UILoadoutItem _rightSpecialSlot = default;
         [SerializeField] private GameState _gameState = default;
+        [SerializeField] private TextMeshProUGUI _fundsText = default;
 
-        void SubscribeToPlayer() {
+        void SubscribeToEvents() {
             _player.onPowerChanged += UpdatePower;
             _player.onShieldsChanged += UpdateShields;
             _player.GetComponent<Ship>().OnHealthChanged += UpdateHull;
             _player.onAltModeChanged += UpdateFireMode;
+            _gameState.onPendingPointsChanged += UpdateFunds;
             UpdateFireMode(_player.AltFireMode);
         }
 
-        void UnsubscribeFromPlayer() {
+        void UnsubscribeFromEvents() {
             if (_player == null)
                 return;
 
@@ -60,11 +62,12 @@ namespace Gyges.Game {
             _player.onShieldsChanged -= UpdateShields;
             _player.Ship.OnHealthChanged -= UpdateHull;
             _player.onAltModeChanged -= UpdateFireMode;
+            _gameState.onPendingPointsChanged -= UpdateFunds;
         }
 
         /// <summary>
         /// Refreshes the HUD area with all data except current power/shields/hull.
-        /// Because this leads to UI rebuilds, it should not get called often.
+        /// Because this leads to UI rebuilds, it should not get called every frame.
         /// </summary>
         void RefreshInfo() {
 
@@ -74,6 +77,7 @@ namespace Gyges.Game {
                         obj.SetActive(false);
                 }
                 _background.color = _inactiveColour;
+                _fundsText.text = "";
             }
             else {
                 _playerName.text = "Player 1";
@@ -86,6 +90,8 @@ namespace Gyges.Game {
                         obj.SetActive(true);
                 }
                 _background.color = _activeColour;
+                int funds = _gameState.PendingPoints + _gameState.totalPoints - _gameState.loadouts[_player.playerNumber].GetTotalValue();
+                _fundsText.text = $"Funds:\n{funds.ToString("###,###,##0")}";
             }
         }
 
@@ -108,5 +114,6 @@ namespace Gyges.Game {
         void UpdatePower(float val) => UpdateBarValue(_powerBar, val, 100f);
         void UpdateShields(float val) => UpdateBarValue(_shieldsBar, val, 100f);
         void UpdateHull(float val) => UpdateBarValue(_hullBar, val, 100f);
+        void UpdateFunds() => RefreshInfo();
     }
 }

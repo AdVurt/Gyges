@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Gyges.Game {
 
@@ -11,13 +12,34 @@ namespace Gyges.Game {
         public Level[] availableLevels;
         public Loadout[] loadouts;
         public int totalPoints = 0;
+
+        [NonSerialized] private int _pendingPoints = 0;
+        /// <summary>
+        /// How many points are pending for the end of the current level?
+        /// </summary>
+        public int PendingPoints {
+            get {
+                return _pendingPoints;
+            }
+            set {
+                bool invoke = _pendingPoints != value;
+                _pendingPoints = value;
+                if (invoke)
+                    onPendingPointsChanged?.Invoke();
+            }
+        }
+
         public ShopStock shopStock;
 
-        public void SetState(Level currentLevel, Level[] availableLevels, int totalPoints, ShopStockAsset stock, params Loadout[] loadouts) {
+
+        public event Action onPendingPointsChanged;
+
+        public void SetState(Level currentLevel, Level[] availableLevels, int totalPoints, int pendingPoints, ShopStockAsset stock, params Loadout[] loadouts) {
             this.currentLevel = currentLevel;
             this.availableLevels = availableLevels;
             this.loadouts = loadouts;
             this.totalPoints = totalPoints;
+            PendingPoints = pendingPoints;
             shopStock = (ShopStock)stock.stock.Clone();
         }
 
@@ -29,6 +51,7 @@ namespace Gyges.Game {
             availableLevels = other.availableLevels;
             loadouts = other.loadouts;
             totalPoints = other.totalPoints;
+            PendingPoints = other._pendingPoints;
             shopStock = other.shopStock;
         }
     }

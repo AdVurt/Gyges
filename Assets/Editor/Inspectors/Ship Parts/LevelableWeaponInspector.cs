@@ -287,7 +287,7 @@ namespace Gyges.CustomEditors {
                     for (int i = 0; i < LevelableWeapon.maximumLevel; i++) {
                         if (formationLevel) {
 
-                            for (int j = 0; j < statsToUpdate[i].formation.Size; j++) {
+                            for (int j = 0; j < statsToUpdate[i].formation.Count; j++) {
                                 object projLoc = statsToUpdate[i].formation[j];
                                 projLoc.GetType().GetField(internalFieldName).SetValue(projLoc, trackingField);
                                 statsToUpdate[i].formation[j] = (ProjectileLocation)projLoc;
@@ -364,7 +364,7 @@ namespace Gyges.CustomEditors {
                 return;
 
             SerializedProperty selectedFormation = _levelStats.GetArrayElementAtIndex(_level).FindPropertyRelative("formation").FindPropertyRelative("_locs");
-            selectedFormation.arraySize = _formationClipboard.Value.Size;
+            selectedFormation.arraySize = _formationClipboard.Value.Count;
             
             for (int i = 0; i < selectedFormation.arraySize; i++) {
                 SerializedProperty loc = selectedFormation.GetArrayElementAtIndex(i);
@@ -388,7 +388,7 @@ namespace Gyges.CustomEditors {
 
             for (int i = 0; i < _levelStats.arraySize; i++) {
                 SerializedProperty formation = _levelStats.GetArrayElementAtIndex(i).FindPropertyRelative("formation").FindPropertyRelative("_locs");
-                formation.arraySize = f.Size;
+                formation.arraySize = f.Count;
 
                 for (int j = 0; j < formation.arraySize; j++) {
                     SerializedProperty loc = formation.GetArrayElementAtIndex(j);

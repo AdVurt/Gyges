@@ -51,7 +51,7 @@ namespace Gyges.CustomEditors {
             if (_target.name == "Global State") {
                 EditorGUILayout.Space();
                 if (GUILayout.Button("Reset to Default")) {
-                    _target.SetState(null, null, 0, null);
+                    _target.SetState(null, null, 0, 0, null);
                     EditorUtility.SetDirty(_target);
                 }
                 GameState copyFrom = (GameState)EditorGUILayout.ObjectField(new GUIContent("Copy From") ,null, typeof(GameState), false);

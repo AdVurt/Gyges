@@ -25,6 +25,9 @@ namespace Gyges.CustomEditors {
                 case QueuedEnemyAction.ActionType.SetRotationSpeed:
                     height = EditorGUIUtility.singleLineHeight * 3;
                     break;
+                case QueuedEnemyAction.ActionType.UnityEvent:
+                    height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("eventValue")) + EditorGUIUtility.singleLineHeight;
+                    break;
                 default:
                     throw new System.Exception("Unknown queued enemy action type.");
             }
@@ -38,6 +41,7 @@ namespace Gyges.CustomEditors {
             SerializedProperty _intValues = property.FindPropertyRelative("intValues");
             SerializedProperty _floatValues = property.FindPropertyRelative("floatValues");
             SerializedProperty _vector2Values = property.FindPropertyRelative("vector2Values");
+            SerializedProperty _eventValue = property.FindPropertyRelative("eventValue");
 
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.PropertyField(new Rect(position.x, yPos, position.width / 2, EditorGUIUtility.singleLineHeight), _actionType, new GUIContent());
@@ -73,6 +77,11 @@ namespace Gyges.CustomEditors {
                     yPos += EditorGUIUtility.singleLineHeight + 2;
                     EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, EditorGUIUtility.singleLineHeight),
                         _floatValues.GetArrayElementAtIndex(1), new GUIContent("Change time"));
+                    break;
+
+                case QueuedEnemyAction.ActionType.UnityEvent:
+                    yPos += 2;
+                    EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, EditorGUI.GetPropertyHeight(_eventValue)), _eventValue);
                     break;
 
                 case QueuedEnemyAction.ActionType.Loop:

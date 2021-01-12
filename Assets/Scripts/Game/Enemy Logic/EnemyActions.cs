@@ -16,7 +16,7 @@ namespace Gyges.Game {
 
         public float timeMultiplier = 1f;
         private Enemy _enemy;
-        protected Rect _borders;
+        protected static readonly Rect _borders = new Rect(-20f, -10f, 40f, 20f);
         private Vector2 _velocity = new Vector2(0f, 0f);
         private float _rotationSpeed = 0f;
         [SerializeField] protected QueuedEnemyAction[] _actions = new QueuedEnemyAction[0];
@@ -47,7 +47,6 @@ namespace Gyges.Game {
 
         protected void Awake() {
             _enemy = GetComponent<Enemy>();
-            _borders = Projectile.borders;
             _actionQueue = new Queue<QueuedEnemyAction>(_actions);
             if (selfDestructWhenDone) {
                 onFinished.AddListener(SelfDestructImmediate);
@@ -123,6 +122,10 @@ namespace Gyges.Game {
                     break;
                 case QueuedEnemyAction.ActionType.Loop:
                     yield return Loop();
+                    break;
+                case QueuedEnemyAction.ActionType.UnityEvent:
+                    action.InvokeEvent();
+                    yield return null;
                     break;
                 default:
                     throw new ArgumentException("Unknown action type");

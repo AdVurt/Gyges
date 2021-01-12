@@ -31,6 +31,7 @@ namespace Gyges.Game {
         
         [SerializeField] private AudioSource _frontWeaponAudioSource = default;
         [SerializeField] private AudioSource _rearWeaponAudioSource = default;
+        [SerializeField] private AudioSource _lootPickupAudioSource = default;
 
         [SerializeField] private GameState _gameState = default;
         public int playerNumber = 0;
@@ -39,6 +40,21 @@ namespace Gyges.Game {
         private bool _altFireMode = false;
         private float _power = 0f;
         private float _shields = 40f;
+
+        public static HashSet<Player> instances = new HashSet<Player>();
+        public static Player GetRandomInstance() {
+            if (instances.Count == 0)
+                return null;
+            int index = UnityEngine.Random.Range(0, instances.Count);
+            HashSet<Player>.Enumerator instanceEnumerator = instances.GetEnumerator();
+            int i = 0;
+            while (instanceEnumerator.MoveNext()) {
+                if (i == index)
+                    return instanceEnumerator.Current;
+            }
+            return null;
+
+        }
 
         /// <summary>
         /// How long to wait between power drain "ticks" when regenerating shields
@@ -107,6 +123,7 @@ namespace Gyges.Game {
         private Vector2 _lastKnownInputDirection;
         private int _shipFlashHash = Shader.PropertyToID("_Flash");
         private int _shipCollisionLayer;
+        private int _lootCollisionLayer;
         private float _shipCollisionTimer = 0f;
         private bool _shipCollisionFlash = false;
         private bool ShipCollisionFlash {
@@ -145,6 +162,7 @@ namespace Gyges.Game {
             _renderer = GetComponent<MeshRenderer>();
             _materials = _renderer.materials;
             _shipCollisionLayer = LayerMask.NameToLayer("Enemy Ships");
+            _lootCollisionLayer = LayerMask.NameToLayer("Loot");
 
 
             //Setup object pools and visuals based on loadout
@@ -154,7 +172,7 @@ namespace Gyges.Game {
                     throw new Exception("Front weapon level cannot be set to zero.");
                 }
                 foreach (GameObject prefab in CurrentLoadout.frontWeapon.projectilePrefabs) {
-                    ObjectPoolManager.PoolSetup(prefab, 5 * CurrentLoadout.frontWeapon.levelStats[CurrentLoadout.frontWeaponLevel - 1].formation.Size);
+                    ObjectPoolManager.PoolSetup(prefab, 5 * CurrentLoadout.frontWeapon.levelStats[CurrentLoadout.frontWeaponLevel - 1].formation.Count);
                 }
                 
             }
@@ -164,7 +182,7 @@ namespace Gyges.Game {
                     throw new Exception("Rear weapon level cannot be set to zero.");
                 }
                 foreach (GameObject prefab in CurrentLoadout.rearWeapon.projectilePrefabs) {
-                    ObjectPoolManager.PoolSetup(prefab, 5 * CurrentLoadout.rearWeapon.levelStats[CurrentLoadout.rearWeaponLevel - 1].formation.Size);
+                    ObjectPoolManager.PoolSetup(prefab, 5 * CurrentLoadout.rearWeapon.levelStats[CurrentLoadout.rearWeaponLevel - 1].formation.Count);
                 }
                 
             }
@@ -194,12 +212,13 @@ namespace Gyges.Game {
             _lastKnownMousePosition = transform.position;
             Global.OnPausedChanged += Global_OnPausedChanged;
             Cursor.SetCursor(_targetCursor, new Vector2(_targetCursor.width / 2, _targetCursor.height / 2), CursorMode.Auto);
+            instances.Add(this);
         }
 
         void OnCollisionStay2D(Collision2D collision) {
 
             // We have collided with an enemy.
-            if ( (collision.collider.gameObject.layer & _shipCollisionLayer) > 0 && _shipCollisionTimer <= 0f) {
+            if ( (collision.collider.gameObject.layer & _shipCollisionLayer) > 0 && _shipCollisionTimer <= 0f && collision.gameObject.gameObject.layer != _lootCollisionLayer) {
                 ShipCollisionFlash = true;
                 TakeDamage(3f);
                 _shipCollisionTimer += 0.1f;
@@ -239,6 +258,7 @@ namespace Gyges.Game {
             Global.OnPausedChanged -= Global_OnPausedChanged;
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             Cursor.visible = true;
+            instances.Remove(this);
         }
 
         void Pause (InputAction.CallbackContext context) {
@@ -391,6 +411,10 @@ namespace Gyges.Game {
             if (Shields > 0f) {
                 tookProjectileToShield.Invoke(coll);
             }
+            else {
+                ShipCollisionFlash = true;
+                _shipCollisionTimer = 0.1f;
+            }
             TakeDamage(coll.damage);
         }
 
@@ -404,6 +428,19 @@ namespace Gyges.Game {
             }
             if (CurrentLoadout.shield != null)
                 _regenDelay = CurrentLoadout.shield.regenDelay;
+        }
+
+        /// <summary>
+        /// Adds the specified amount of money to pending funds.
+        /// Do not call this for when an IWaveObject dies, the WaveManager class handles enemy bounties.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddFunds(int amount) {
+            _gameState.PendingPoints += amount;
+        }
+
+        public void PlayLootSound(AudioClip sound) {
+            _lootPickupAudioSource.PlayOneShot(sound);
         }
     }
 

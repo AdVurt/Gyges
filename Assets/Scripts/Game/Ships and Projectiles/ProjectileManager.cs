@@ -40,12 +40,6 @@ namespace Gyges.Game {
             }
         }
 
-        public int Size {
-            get {
-                return _locs.Length;
-            }
-        }
-
         [SerializeField]
         private ProjectileLocation[] _locs;
 #if UNITY_EDITOR
@@ -53,19 +47,19 @@ namespace Gyges.Game {
         /// Used only in the custom property drawer.
         /// </summary>
         [HideInInspector] public int selectedProjectile;
-        public int SelectedProjectile {
-            get {
-                return selectedProjectile;
-            }
-        }
         [HideInInspector] public string guid;
         [HideInInspector] public bool rearWeapon;
 #endif
 
-
         public ProjectileLocation this[int index] {
             get { return _locs[index]; }
             set { _locs[index] = value; }
+        }
+
+        public int Count {
+            get {
+                return _locs.Length;
+            }
         }
 
         public IEnumerator GetEnumerator() {
@@ -84,7 +78,7 @@ namespace Gyges.Game {
 
         public bool Equals(ProjectileFormation other) => _locs == other._locs;
         public override bool Equals(object obj) => Equals((ProjectileFormation)obj);
-        public override int GetHashCode() => _locs.GetHashCode();
+        public override int GetHashCode() => (_locs.GetHashCode()+1).GetHashCode();
 
         public static bool operator ==(ProjectileFormation a, ProjectileFormation b) => a._locs == b._locs;
         public static bool operator !=(ProjectileFormation a, ProjectileFormation b) => a._locs != b._locs;
@@ -94,12 +88,7 @@ namespace Gyges.Game {
     [Serializable]
     public struct ProjectileLocation {
 
-        private static readonly Vector2 _defaultSpeed = new Vector2(0f, 15f);
-        public static Vector2 DefaultSpeed {
-            get {
-                return _defaultSpeed;
-            }
-        }
+        public static Vector2 DefaultSpeed => new Vector2(0f, 15f);
 
         /// <summary>
         /// Returns a centralised projectile location with no offset or rotation applied to it.
@@ -126,7 +115,7 @@ namespace Gyges.Game {
         public float damageMultiplier;
 
         /// <summary>
-        /// The prefab associated with this projectile. Intended to line up with the LevelableWeapon's array of prefabs.
+        /// The prefab associated with this projectile. Intended to line up with the Weapon's array of prefabs.
         /// </summary>
         public int prefabToUse;
 

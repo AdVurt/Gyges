@@ -53,23 +53,29 @@ namespace Gyges.Game {
         void Fire() {
 
             Vector3 basePosition = transform.position + (Vector3)_originOffset;
+            basePosition.z = -1f;
             float baseRotation = Vector2.Angle(Vector2.up, _direction);
+            float rot = baseRotation;
+
+            switch (_projectileBehaviour) {
+                case ProjectileBehaviour.FlatDirection:
+                    break;
+                case ProjectileBehaviour.AimedAtPlayer:
+                    Vector3 playerPosition = Player.GetRandomInstance().transform.position;
+                    rot = Vector2.Angle(playerPosition - basePosition, Vector2.up) * (playerPosition.x > basePosition.x ? -1f : 1f);
+                    break;
+                default:
+                    throw new System.NotImplementedException();
+            }
+
 
             if (_useFormation) {
                 foreach (ProjectileLocation loc in _projectileFormation) {
-                    float rot;
-                    switch (_projectileBehaviour) {
-                        case ProjectileBehaviour.FlatDirection:
-                            rot = baseRotation + loc.rotation;
-                            break;
-                        default:
-                            throw new System.NotImplementedException();
-                    }
-                    SpawnProjectile(basePosition + new Vector3(loc.x, loc.y, 0f), rot, loc.speed, _damage);
+                    SpawnProjectile(basePosition + new Vector3(loc.x, loc.y), rot + loc.rotation, loc.speed, _damage);
                 }
             }
             else {
-                SpawnProjectile(basePosition, baseRotation, _speed, _damage);
+                SpawnProjectile(basePosition, rot, _speed, _damage);
             }
 
         }

@@ -17,6 +17,7 @@ namespace Gyges.CustomEditors {
         SerializedProperty _waveNumber;
         SerializedProperty _endTriggerType;
         SerializedProperty _timeToWait;
+        SerializedProperty _gameState;
 
         void OnEnable() {
 
@@ -31,6 +32,7 @@ namespace Gyges.CustomEditors {
             _waveNumber = serializedObject.FindProperty("waveNumber");
             _endTriggerType = serializedObject.FindProperty("_endTriggerType");
             _timeToWait = serializedObject.FindProperty("_timeToWait");
+            _gameState = serializedObject.FindProperty("gameState");
         }
 
         private Vector3 CalculateDefaultWavePosition(int waveNumber) {
@@ -42,6 +44,7 @@ namespace Gyges.CustomEditors {
             serializedObject.Update();
 
             EditorGUILayout.LabelField("Manager Info", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_gameState);
             EditorGUILayout.PropertyField(_startActive);
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(_waveNumber);
@@ -118,7 +121,11 @@ namespace Gyges.CustomEditors {
 
             //Do not show manual array editing in multi-edit mode. Each object should belong to only one wave.
             if (!serializedObject.isEditingMultipleObjects) {
+                EditorGUI.BeginChangeCheck();
                 EditorGUILayout.PropertyField(_objects, new GUIContent("Manual Object Array Editing"));
+                if (EditorGUI.EndChangeCheck()) {
+                    EditorApplication.RepaintHierarchyWindow();
+                }
                 if (_objects.arraySize != _targets[0].transform.childCount) {
                     EditorGUILayout.HelpBox("The number of children assigned to this object is different than the Object array. Sync is recommended.", MessageType.Warning);
                 }

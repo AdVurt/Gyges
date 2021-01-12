@@ -9,13 +9,19 @@ namespace Gyges.Game {
             WaitForSeconds,
             SetVelocity,
             SetRotationSpeed,
-            Loop
+            Loop,
+            UnityEvent,
         };
 
         public ActionType actionType;
         public int[] intValues;
         public float[] floatValues;
         public Vector2[] vector2Values;
+        public UnityEvent eventValue;
         public UnityEvent onFinished;
+
+        public void InvokeEvent() {
+            eventValue?.Invoke();
+        }
     }
 }

@@ -51,8 +51,8 @@ namespace Gyges.CustomEditors {
 
             if (GUILayout.Button("Mass Speed Update")) {
                 WeaponLogic log = _target.logic;
-                ProjectileLocation[] locs = new ProjectileLocation[log.formation.Size];
-                for (int i = 0; i < log.formation.Size; i++) {
+                ProjectileLocation[] locs = new ProjectileLocation[log.formation.Count];
+                for (int i = 0; i < log.formation.Count; i++) {
                     locs[i] = new ProjectileLocation(log.formation[i].x, log.formation[i].y, massSpeedUpdate, log.formation[i].rotation);
                 }
                 log.formation = new ProjectileFormation(locs);

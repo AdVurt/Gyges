@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c1a379d26a25df74798c294700303bb3, type: 3}
-  m_Name: Fodder Enemy Health
+  m_Name: Pincer Health
   m_EditorClassIdentifier: 
   value: 8

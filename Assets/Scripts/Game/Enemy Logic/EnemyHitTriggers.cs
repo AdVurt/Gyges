@@ -6,8 +6,8 @@ namespace Gyges.Game {
     [RequireComponent(typeof(Enemy))]
     public class EnemyHitTriggers : MonoBehaviour {
 
-        private Renderer _renderer;
-        private Material _material;
+        private Enemy _enemy;
+        private Renderer[] _renderers;
         private readonly int _flashMatFloat = Shader.PropertyToID("_Flash");
         
         [Header("Flash Effect")]
@@ -17,8 +17,12 @@ namespace Gyges.Game {
         private bool _flashCoRtRunning = false;
 
         void Awake() {
-            _renderer = GetComponent<Renderer>();
-            _material = _renderer.material;
+            _enemy = GetComponent<Enemy>();
+            _renderers = new Renderer[_enemy.AdditionalRenderers.Length+1];
+            _renderers[0] = GetComponent<Renderer>();
+            for (int i = 0; i < _enemy.AdditionalRenderers.Length; i++) {
+                _renderers[i + 1] = _enemy.AdditionalRenderers[i];
+            }
         }
 
 
@@ -39,12 +43,23 @@ namespace Gyges.Game {
 
         private IEnumerator Flash() {
 
-            _material.SetFloat(_flashMatFloat, 1f);
+            foreach (Renderer ren in _renderers) {
+                foreach (Material mat in ren.materials) {
+                    mat.SetFloat(_flashMatFloat, 1f);
+                }
+            }
+            
             while (_flashTimer > 0f) {
                 _flashTimer -= Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
-            _material.SetFloat(_flashMatFloat, 0f);
+
+            foreach (Renderer ren in _renderers) {
+                foreach (Material mat in ren.materials) {
+                    mat.SetFloat(_flashMatFloat, 0f);
+                }
+            }
+
             _flashCoRtRunning = false;
         }
 

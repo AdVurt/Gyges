@@ -17,14 +17,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e875230dcc1ed94469a18f09f2c38342, type: 2}
   loadouts:
   - frontWeapon: {fileID: 11400000, guid: f1960f821af10b4478453845f48491cc, type: 2}
-    rearWeapon: {fileID: 0}
-    generator: {fileID: 11400000, guid: 0b2ac2813e2318244ba9f468c37864fb, type: 2}
+    rearWeapon: {fileID: 11400000, guid: d7e64b3b931570345826d2cd8a6e7c6c, type: 2}
+    generator: {fileID: 11400000, guid: d33e2ec7327c6c64692ad7f177f965f4, type: 2}
     hull: {fileID: 11400000, guid: 99e34748f56dd414e9363f498e6046fb, type: 2}
     shield: {fileID: 11400000, guid: 8a1e86c2105fc75468ea4764fc388832, type: 2}
     specialLeft: {fileID: 0}
     specialRight: {fileID: 0}
-    frontWeaponLevel: 5
-    rearWeaponLevel: 1
+    frontWeaponLevel: 3
+    rearWeaponLevel: 3
   totalPoints: 19500
   shopStock:
     hulls:

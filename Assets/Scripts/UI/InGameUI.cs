@@ -91,6 +91,7 @@ namespace Gyges.Game {
                 void SetAlert(Player p) {
                     if (p.Hull <= 20f && p.Hull <= p.CurrentLoadout.hull.startingHull) {
                         alert = true;
+                        
                     }
                 }
                 
@@ -112,6 +113,7 @@ namespace Gyges.Game {
 
 
             }
+
         }
 
         IEnumerator LevelIntro() {
