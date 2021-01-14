@@ -2,7 +2,7 @@
 
 namespace Gyges.Game {
     public interface IWaveObject {
-        event Action<IWaveObjectDestroyEventParams> OnDestroy;
+        event Action<IWaveObjectDestroyEventParams> onDestroy;
     }
 
     public struct IWaveObjectDestroyEventParams {

@@ -5,7 +5,7 @@ namespace Gyges.Utility {
 
     [Serializable]
     public abstract class VariableReference<BasicType> {
-        public bool useConstant = true;
+        public bool useConstant = false;
         public BasicType constantValue;
         public ScriptableObjectVariable<BasicType> variable;
 
@@ -14,6 +14,21 @@ namespace Gyges.Utility {
                 return useConstant ? constantValue : variable.value;
             }
         }
+
+        public VariableReference() {
+            
+        }
+
+        public VariableReference(BasicType constant) {
+            useConstant = true;
+            constantValue = constant;
+        }
+
+        public VariableReference(ScriptableObjectVariable<BasicType> variable) {
+            useConstant = false;
+            this.variable = variable;
+        }
+
     }
 
     [Serializable] public class BoolReference : VariableReference<bool> { }

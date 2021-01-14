@@ -17,6 +17,7 @@ namespace Gyges.Game {
         private Ship _ship;
         private Material[] _materials;
         private static readonly int _dissolveAmountMatFloat = Shader.PropertyToID("_DissolveAmount");
+        private bool _dead = false;
 
         [Header("Game Data")]
         public FloatReference startingHealth;
@@ -35,7 +36,7 @@ namespace Gyges.Game {
             }
         }
 
-        public event Action<IWaveObjectDestroyEventParams> OnDestroy;
+        public event Action<IWaveObjectDestroyEventParams> onDestroy;
 
         void Awake() {
             _ship = GetComponent<Ship>();
@@ -43,6 +44,11 @@ namespace Gyges.Game {
             _collider = GetComponent<Collider2D>();
             _materials = GetComponent<Renderer>().materials;
             _ship.OnDeath += _ship_OnDeath;
+
+            if (startingHealth.Value <= 0) {
+                Debug.Log($"Enemy {name} started with 0 health.");
+                Destroy(gameObject);
+            }
         }
 
         private void _ship_OnDeath(GameObj obj) {
@@ -64,7 +70,10 @@ namespace Gyges.Game {
         /// </summary>
         /// <param name="killedByPlayer">Was it killed by the player? (For example, should points be awarded?)</param>
         public void Kill(bool killedByPlayer = true) {
-            OnDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, killedByPlayer, bounty.Value));
+            if (_dead)
+                return;
+
+            onDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, killedByPlayer, bounty.Value));
 
             // Spawn any loot.
             if (killedByPlayer && lootPrefabs.Length > 0 && lootFormation.Count > 0) {
@@ -80,6 +89,7 @@ namespace Gyges.Game {
 
             }
 
+            _dead = true;
             Destroy(gameObject);
         }
 

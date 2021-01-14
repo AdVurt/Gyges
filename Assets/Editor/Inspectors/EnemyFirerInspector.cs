@@ -27,9 +27,9 @@ namespace Gyges.CustomEditors {
             _projectileBehaviour = serializedObject.FindProperty("_projectileBehaviour");
             _direction = serializedObject.FindProperty("_direction");
             _directionArray = serializedObject.FindProperty("_directionArray");
+            _speed = serializedObject.FindProperty("_speed");
             _projectileFormation = serializedObject.FindProperty("_projectileFormation");
             _useFormation = serializedObject.FindProperty("_useFormation");
-            _speed = serializedObject.FindProperty("_speed");
             _originOffset = serializedObject.FindProperty("_originOffset");
             _damage = serializedObject.FindProperty("_damage");
         }
@@ -54,7 +54,9 @@ namespace Gyges.CustomEditors {
                 if (_projectilePrefab.objectReferenceValue != null) {
 
                     EditorGUILayout.PropertyField(_projectileBehaviour, new GUIContent("Behaviour"));
-                    EditorGUILayout.PropertyField(_speed);
+                    if (!_useFormation.boolValue) {
+                        EditorGUILayout.PropertyField(_speed);
+                    }
                     EditorGUILayout.PropertyField(_damage);
                     EnemyFirer.ProjectileBehaviour beh = (EnemyFirer.ProjectileBehaviour)_projectileBehaviour.enumValueIndex;
 

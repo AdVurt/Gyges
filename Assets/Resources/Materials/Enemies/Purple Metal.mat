@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Purple Metal
+  m_Shader: {fileID: -6465566751694194690, guid: 52f3fe0ef6bb5f04eb82fc76660a77d6, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _DissolveAmount: 0
+    - _DissolveBorderWidth: 0.05
+    - _DissolveScale: 100
+    - _DissolveWidth: 0
+    - _Flash: 0
+    - _Fresnel: 0
+    - _FresnelPower: 4
+    - _Smoothness: 0.4
+    - _metallic: 0
+    m_Colors:
+    - Color_B0386BBE: {r: 2, g: 1.1248915, b: 0.745283, a: 0}
+    - _Emission: {r: 0, g: 0, b: 0, a: 0}
+    - _FlashColour: {r: 2.9960785, g: 1.6, b: 1.1450981, a: 0.36078432}
+    - _Tint: {r: 0.31023026, g: 0.17933401, b: 0.36900002, a: 0}
+  m_BuildTextureStacks: []

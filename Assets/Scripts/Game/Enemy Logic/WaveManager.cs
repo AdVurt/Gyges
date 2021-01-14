@@ -32,22 +32,6 @@ namespace Gyges.Game {
         [SerializeField] private float _timeToWait = 5f;
         public GameState gameState;
 
-#if UNITY_EDITOR
-        void Awake() {
-
-            int objectsThatStartedActive = 0;
-            foreach (GameObject obj in objects) {
-                if (obj.activeInHierarchy) {
-                    obj.SetActive(false);
-                    objectsThatStartedActive++;
-                }
-            }
-            if (objectsThatStartedActive > 0)
-            Debug.LogWarning($"<b>{name}</b> - {objectsThatStartedActive} enemy wave object{(objectsThatStartedActive == 1 ? "" : "s")} started the scene in an active state. " + 
-                $"{(objectsThatStartedActive == 1 ? "This has" : "They have")} been disabled.", this);
-        }
-#endif
-
         void Update() {
             if (!Global.enableGameLogic || Global.Paused || (!active && !_startActive))
                 return;
@@ -72,7 +56,7 @@ namespace Gyges.Game {
             foreach (GameObject obj in objects) {
                 obj.SetActive(true);
                 foreach (IWaveObject waveObject in obj.GetComponents<IWaveObject>()) {
-                    waveObject.OnDestroy += Enemy_OnDestroy;
+                    waveObject.onDestroy += Enemy_OnDestroy;
                     _spawnedObjects.Add(waveObject);
                 }
             }
@@ -108,6 +92,28 @@ namespace Gyges.Game {
         }
 
 #if UNITY_EDITOR
+
+        [InitializeOnEnterPlayMode]
+        static void OnEnterPlaymodeInEditor(EnterPlayModeOptions options) {
+            foreach(WaveManager mgr in FindObjectsOfType<WaveManager>()) {
+                mgr.EditorPlayVerify();
+            }
+        }
+
+        void EditorPlayVerify() {
+
+            int objectsThatStartedActive = 0;
+            foreach (GameObject obj in objects) {
+                if (obj.activeInHierarchy) {
+                    obj.SetActive(false);
+                    objectsThatStartedActive++;
+                }
+            }
+            if (objectsThatStartedActive > 0)
+                Debug.LogWarning($"<b>{name}</b> - {objectsThatStartedActive} enemy wave object{(objectsThatStartedActive == 1 ? "" : "s")} started the scene in an active state. " +
+                    $"{(objectsThatStartedActive == 1 ? "This has" : "They have")} been disabled.", this);
+        }
+
         void OnDrawGizmos() {
 
             System.Text.StringBuilder gizText = new System.Text.StringBuilder(gameObject.name);

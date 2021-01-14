@@ -10,6 +10,7 @@ namespace Gyges.CustomEditors {
     public class WaveManagerInspector : Editor {
 
         WaveManager[] _targets;
+        SerializedProperty _script;
         SerializedProperty _cubeColour;
         SerializedProperty _objects;
         SerializedProperty _startActive;
@@ -25,6 +26,7 @@ namespace Gyges.CustomEditors {
             for (int i = 0; i < serializedObject.targetObjects.Length; i++) {
                 _targets[i] = (WaveManager)serializedObject.targetObjects[i];
             }
+            _script = serializedObject.FindProperty("m_Script");
             _objects = serializedObject.FindProperty("objects");
             _cubeColour = serializedObject.FindProperty("_cubeColour");
             _startActive = serializedObject.FindProperty("_startActive");
@@ -40,6 +42,11 @@ namespace Gyges.CustomEditors {
         }
 
         public override void OnInspectorGUI() {
+
+            bool GUIEn = GUI.enabled;
+            GUI.enabled = false;
+            EditorGUILayout.PropertyField(_script);
+            GUI.enabled = GUIEn;
 
             serializedObject.Update();
 
