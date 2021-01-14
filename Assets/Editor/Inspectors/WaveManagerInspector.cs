@@ -43,6 +43,7 @@ namespace Gyges.CustomEditors {
 
         public override void OnInspectorGUI() {
 
+            bool forceSceneViewUpdate = false;
             bool GUIEn = GUI.enabled;
             GUI.enabled = false;
             EditorGUILayout.PropertyField(_script);
@@ -118,10 +119,7 @@ namespace Gyges.CustomEditors {
 
             if (GUILayout.Button(new GUIContent($"Sync Object Array{(_targets.Length > 1 ? "s" : "")}", $"Rebuilds the object array with all of {(_targets.Length > 1 ? "these objects'" : "this object's")} child objects."))) {
                 foreach (WaveManager target in _targets) {
-                    target.objects = new GameObject[target.transform.childCount];
-                    for (int i = 0; i < target.objects.Length; i++) {
-                        target.objects[i] = target.transform.GetChild(i).gameObject;
-                    }
+                    target.ResynchroniseArray();
                 }
                 EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             }
@@ -142,7 +140,12 @@ namespace Gyges.CustomEditors {
             EditorGUILayout.LabelField("Editor Properties", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_cubeColour, new GUIContent("Playable area colour"));
 
-            serializedObject.ApplyModifiedProperties();
+            if (serializedObject.ApplyModifiedProperties() || forceSceneViewUpdate) {
+                if (EditorWindow.HasOpenInstances<WavesWindow>()) {
+                    EditorWindow.GetWindow<WavesWindow>().Repaint();
+                }
+                SceneView.RepaintAll();
+            }
         }
 
     }

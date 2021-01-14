@@ -19,12 +19,19 @@ namespace Gyges.Game {
 
 #if UNITY_EDITOR
         [SerializeField] private Color _cubeColour = new Color(1f, 1f, 1f, 0.25f);
-        private bool _highlightInHierarchy = false;
-        private Color _hierarchyHighlightColour = Color.clear;
+        private ErrorStatus[] _errorStatuses = new ErrorStatus[0];
 #endif
         public GameObject[] objects = new GameObject[0];
         private HashSet<IWaveObject> _spawnedObjects = new HashSet<IWaveObject>(); //Keeps track of spawned objects.
         [SerializeField] private bool _startActive = false;
+        public bool StartActive {
+            get {
+                return _startActive;
+            }
+            set {
+                _startActive = value;
+            }
+        }
         [SerializeField] private WaveManager _nextManager = default;
         public int waveNumber = 1;
         [HideInInspector] public bool active = false;
@@ -91,6 +98,18 @@ namespace Gyges.Game {
             }
         }
 
+        /// <summary>
+        /// Resynchronise the object array.
+        /// </summary>
+        public void ResynchroniseArray() {
+            objects = new GameObject[transform.childCount];
+            for (int i = 0; i < objects.Length; i++) {
+                objects[i] = transform.GetChild(i).gameObject;
+            }
+            UpdateErrors();
+        }
+
+
 #if UNITY_EDITOR
 
         [InitializeOnEnterPlayMode]
@@ -118,56 +137,26 @@ namespace Gyges.Game {
 
             System.Text.StringBuilder gizText = new System.Text.StringBuilder(gameObject.name);
             gizText.AppendLine();
-            
 
-            if (EditorApplication.isPlaying) {
-                _highlightInHierarchy = false;
+
+            int status = 0;
+            foreach(ErrorStatus error in _errorStatuses) {
+                if (error.status > status)
+                    status = error.status;
+                gizText.AppendLine($"<color={ErrorStatus.GetStatusColourName(error.status)}>{error.errorMessage}</color>");
             }
-            else {
-                int status = 0;
-                if (transform.childCount == 0) {
-                    gizText.AppendLine("<color=yellow>No children</color>");
-                    status = 1;
-                }
-                if (transform.childCount != objects.Length) {
-                    gizText.AppendLine("<color=red>Objects array does not match hierarchy children</color>");
-                    status = 2;
-                }
-                int nonWaveObjectChildren = 0;
-                foreach (GameObject obj in objects) {
-                    if (obj == null || !obj.TryGetComponent(out IWaveObject en)) {
-                        nonWaveObjectChildren++;
-                    }
-                }
-                if (nonWaveObjectChildren > 0) {
-                    gizText.AppendLine($"<color=red>{nonWaveObjectChildren} non-wave object child{(nonWaveObjectChildren > 1 ? "ren" : "")}</color>");
-                    status = 2;
-                }
 
-                switch (status) {
-                    case 0:
-                        Gizmos.color = _cubeColour;
-                        _highlightInHierarchy = false;
-                        break;
-                    case 1:
-                        Gizmos.color = Color.yellow;
-                        _hierarchyHighlightColour = Color.yellow;
-                        _highlightInHierarchy = true;
-                        break;
-                    case 2:
-                        Gizmos.color = Color.red;
-                        _hierarchyHighlightColour = Color.red;
-                        _highlightInHierarchy = true;
-                        break;
-                    default:
-                        throw new System.Exception("Unknown gizmo status.");
-                }
+            if (_errorStatuses.Length > 0) {
+                Gizmos.color = ErrorStatus.GetStatusColour(status);
             }
 
             Gizmos.DrawWireCube(transform.position, CubeSize);
             DrawString(gizText.ToString(), transform.position);
         }
 
+        void OnValidate() {
+            UpdateErrors();
+        }
 
         static void DrawString(string text, Vector3 worldPos, Color? colour = null) {
             Handles.BeginGUI();
@@ -220,28 +209,70 @@ namespace Gyges.Game {
             return new Vector3(0f, waveNumber * (CubeSize.y + 1), 0f);
         }
 
-        #region Hierarchy Highlight Logic
+        #region Waves Window Highlight Logic
 
-        [InitializeOnLoadMethod]
-        static void SubscribeToHierarchy() {
-            EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyGUI;
+        public void UpdateErrors() {
+
+            if (EditorApplication.isPlaying) {
+                if (_errorStatuses.Length > 0)
+                    _errorStatuses = new ErrorStatus[0];
+                return;
+            }
+
+            List<ErrorStatus> errors = new List<ErrorStatus>();
+
+            if (transform.childCount == 0) {
+                errors.Add(new ErrorStatus(true, 1, "No children."));
+            }
+            if (transform.childCount != objects.Length) {
+                errors.Add(new ErrorStatus(true, 2, "Objects array does not match hierarchy children."));
+            }
+            int nonWaveObjectChildren = 0;
+            foreach (GameObject obj in objects) {
+                if (obj == null || !obj.TryGetComponent(out IWaveObject en)) {
+                    nonWaveObjectChildren++;
+                }
+            }
+            if (nonWaveObjectChildren > 0) {
+                errors.Add(new ErrorStatus(true, 2, $"{nonWaveObjectChildren} non-wave object child{(nonWaveObjectChildren > 1 ? "ren" : "")}."));
+            }
+
+            _errorStatuses = errors.ToArray();
         }
 
-        private static void OnHierarchyGUI(int instanceID, Rect selectionRect) {
-            if (Event.current.type != EventType.Repaint)
-                return;
-
-            Object obj = EditorUtility.InstanceIDToObject(instanceID);
-            if (obj == null)
-                return;
-
-            if (((GameObject)obj).TryGetComponent(out WaveManager waveManager))
-                waveManager.DrawHierarchyRect(selectionRect);
+        public ErrorStatus[] GetErrors() {
+            return _errorStatuses;
         }
 
-        private void DrawHierarchyRect(Rect rect) {
-            if (_highlightInHierarchy && _hierarchyHighlightColour.a > 0f) {
-                EditorGUI.DrawRect(new Rect(rect.xMax, rect.y + (rect.height/2) - 8, 16, 16), _hierarchyHighlightColour);
+        public struct ErrorStatus {
+            public bool draw;
+            public int status;
+            public string errorMessage;
+
+            public ErrorStatus(bool draw, int status, string errorMessage) {
+                this.draw = draw;
+                this.status = status;
+                this.errorMessage = errorMessage;
+            }
+
+            public static Color GetStatusColour(int status) {
+                Color result = Color.black;
+                ColorUtility.TryParseHtmlString(GetStatusColourName(status), out result);
+                return result;
+            }
+
+            public static string GetStatusColourName(int status) {
+                switch (status) {
+                    case 0:
+                        return "black";
+                    case 1:
+                        return "yellow";
+                    case 2:
+                        return "red";
+                    default:
+                        throw new System.ArgumentException($"Unknown status ID {status}");
+
+                }
             }
         }
 

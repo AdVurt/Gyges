@@ -19,12 +19,19 @@ namespace Gyges.Game {
                 MusicManager.Play(intro, music, delay, loop);
             else
                 MusicManager.Play(music, delay, loop);
+            Destroy(gameObject);
         }
 
         void OnDestroy() {
             onDestroy?.Invoke(new IWaveObjectDestroyEventParams());
         }
 
+
+        #region Interface Members
+        public Vector2 Velocity => Vector2.zero;
+        public bool IsOutOfBounds() => !EnemyActions.borders.Contains(transform.position);
+        public Transform GetTransform() => transform;
+        #endregion
     }
 
 }

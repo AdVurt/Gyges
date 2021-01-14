@@ -12,11 +12,11 @@ namespace Gyges.Game {
     /// In order to function when inheriting from this class, OnEnable should be implemented.
     /// </summary>
     [RequireComponent(typeof(Enemy))]
-    public abstract class EnemyActions : MonoBehaviour {
+    public abstract class EnemyActions : MonoBehaviour, IVelocitySetter {
 
         public float timeMultiplier = 1f;
         private Enemy _enemy;
-        protected static readonly Rect _borders = new Rect(-20f, -10f, 40f, 20f);
+        public static readonly Rect borders = new Rect(-20f, -10f, 40f, 20f);
         private Vector2 _velocity = new Vector2(0f, 0f);
         private float _rotationSpeed = 0f;
         [SerializeField] protected QueuedEnemyAction[] _actions = new QueuedEnemyAction[0];
@@ -64,10 +64,10 @@ namespace Gyges.Game {
 
             //If we're out of actions and we're outside of the game borders, self destruct
             if (_actionQueue.Count == 0 && (
-                (_velocity.x > 0f && transform.position.x > _borders.xMax) ||
-                (_velocity.x < 0f && transform.position.x < _borders.xMin) ||
-                (_velocity.y > 0f && transform.position.y > _borders.yMax) ||
-                (_velocity.y < 0f && transform.position.y < _borders.yMin)
+                (_velocity.x > 0f && transform.position.x > borders.xMax) ||
+                (_velocity.x < 0f && transform.position.x < borders.xMin) ||
+                (_velocity.y > 0f && transform.position.y > borders.yMax) ||
+                (_velocity.y < 0f && transform.position.y < borders.yMin)
                 )) {
                 SelfDestructImmediate();
             }
@@ -95,6 +95,68 @@ namespace Gyges.Game {
         }
 
         /// <summary>
+        /// Changes the current position to a given X or Y position over a given period of time.
+        /// If that period is 0, the change will be instant.
+        /// </summary>
+        /// <param name="newPosition">The new X or Y value.</param>
+        /// <param name="isY">Is this a Y position?</param>
+        /// <param name="lerpTime">The length of time (in seconds) to gradually reach the new position.</param>
+        /// <param name="relative">Is this new position relative to the current position?</param>
+        /// <returns></returns>
+        protected IEnumerator SetPosition(float newPosition, bool isY, float lerpTime, bool relative) {
+
+            Vector2 startingPosition = transform.position;
+            Vector2 destinationPosition = relative ? startingPosition : Vector2.zero;
+            if (isY)
+                destinationPosition.y += newPosition;
+            else
+                destinationPosition.x += newPosition;
+
+
+            float timer = 0f;
+
+            while (timer < lerpTime) {
+                if (isY)
+                    transform.position = new Vector3(transform.position.x, Mathf.Lerp(startingPosition.y, destinationPosition.y, timer / lerpTime), transform.position.z);
+                else
+                    transform.position = new Vector3(Mathf.Lerp(startingPosition.x, destinationPosition.x, timer / lerpTime), transform.position.y, transform.position.z);
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            if (isY)
+                transform.position = new Vector3(transform.position.x, destinationPosition.y, transform.position.z);
+            else
+                transform.position = new Vector3(destinationPosition.x, transform.position.y, transform.position.z);
+            yield return null;
+        }
+
+
+        /// <summary>
+        /// Changes the current position to a given X or Y position over a given period of time.
+        /// If that period is 0, the change will be instant.
+        /// </summary>
+        /// <param name="newPosition">The new position.</param>
+        /// <param name="lerpTime">The length of time (in seconds) to gradually reach the new position.</param>
+        /// <param name="relative">Is this new position relative to the current position?</param>
+        /// <returns></returns>
+        protected IEnumerator SetPosition(Vector2 newPosition, float lerpTime, bool relative) {
+
+            Vector3 startingPosition = transform.position;
+            Vector3 destinationPosition = relative ? startingPosition : (Vector3.forward * transform.position.z);
+            destinationPosition += (Vector3)newPosition;
+
+            float timer = 0f;
+            while (timer < lerpTime) {
+                transform.position = Vector3.Lerp(startingPosition, destinationPosition, timer / lerpTime);
+                timer += Time.deltaTime;
+            }
+            transform.position = destinationPosition;
+
+            yield return null;
+        }
+
+        /// <summary>
         /// Waits for a specified amount of time.
         /// </summary>
         protected IEnumerator Wait(float seconds) {
@@ -119,6 +181,15 @@ namespace Gyges.Game {
                     break;
                 case QueuedEnemyAction.ActionType.SetRotationSpeed:
                     yield return SetRotationSpeed(action.floatValues[0], action.floatValues[1]);
+                    break;
+                case QueuedEnemyAction.ActionType.SetPosition:
+                    if (action.intValues[0] == 2) {
+                        yield return SetPosition(action.vector2Values[0], action.floatValues[0], action.boolValues[0]);
+                    }
+                    else {
+                        yield return SetPosition(action.floatValues[1], action.intValues[0] == 1, action.floatValues[0], action.boolValues[0]);
+                    }
+
                     break;
                 case QueuedEnemyAction.ActionType.Loop:
                     yield return Loop();

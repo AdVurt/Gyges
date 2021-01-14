@@ -30,6 +30,18 @@ namespace Gyges.Game {
         [SerializeField] [Range(1f,10f)] private float _dissolveSpeed = 4f;
         [SerializeField, Tooltip("Renderers that should be affected by this other than the one directly attached to this object (for example, child object renderers).")] private Renderer[] _additionalRenderers = new Renderer[0];
 
+        #region Interface-required properties
+        public Vector2 Velocity {
+            get {
+                Vector2 result = Vector2.zero;
+                foreach(IVelocitySetter vel in GetComponents<IVelocitySetter>()) {
+                    result += vel.GetVelocity();
+                }
+                return result;
+            }
+        }
+        #endregion
+
         public Renderer[] AdditionalRenderers {
             get {
                 return _additionalRenderers;
@@ -63,6 +75,19 @@ namespace Gyges.Game {
         public void TakeDamageFromCollision(ProjectileCollision coll) {
             _ship.Health -= coll.damage;
         }
+
+
+        #region Interface-required methods
+        public bool IsOutOfBounds() {
+            if (TryGetComponent(out EnemyActions actions)) {
+                //It is assumed that any EnemyActions attached to this object will handle out-of-bounds behaviour.
+                return false;
+            }
+            return EnemyActions.borders.Contains(transform.position);
+        }
+
+        public Transform GetTransform() => transform;
+        #endregion
 
         /// <summary>
         /// Instantly destroys this game object, calling the OnDestroy event in the process.
