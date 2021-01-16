@@ -3,9 +3,12 @@ using UnityEngine;
 
 namespace Gyges.Game {
     public interface IWaveObject {
+
+        bool StartLogicBeforeGameplay { get; }
         event Action<IWaveObjectDestroyEventParams> onDestroy;
         Vector2 Velocity { get; }
         bool IsOutOfBounds();
+        bool IsOutOfBounds(out Enemy.OutOfBoundsDirections oobDir);
         Transform GetTransform();
     }
 

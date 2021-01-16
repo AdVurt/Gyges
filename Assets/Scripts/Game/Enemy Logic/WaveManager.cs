@@ -38,8 +38,31 @@ namespace Gyges.Game {
         [SerializeField] private EndTriggerTypes _endTriggerType = EndTriggerTypes.None;
         [SerializeField] private float _timeToWait = 5f;
         public GameState gameState;
+        private bool _waveHasEnded = false;
+
+        // Pre-activate any objects that have the "Start Logic Before Gameplay" flag set to true if this wave is set to start active.
+        // This will happen, for instance, for clouds that should be visible and moving when the player spawns in.
+        void Awake() {
+
+            if (_startActive) {
+                foreach (GameObject obj in objects) {
+
+                    foreach (IWaveObject waveObject in obj.GetComponents<IWaveObject>()) {
+                        if (waveObject.StartLogicBeforeGameplay) {
+                            if (!obj.activeInHierarchy)
+                                obj.SetActive(true);
+                            if (obj.transform.parent != null)
+                                obj.transform.SetParent(null, true);
+                            waveObject.onDestroy += Enemy_OnDestroy;
+                            _spawnedObjects.Add(waveObject);
+                        }
+                    }
+                }
+            }
+        }
 
         void Update() {
+            
             if (!Global.enableGameLogic || Global.Paused || (!active && !_startActive))
                 return;
 
@@ -62,7 +85,10 @@ namespace Gyges.Game {
             transform.DetachChildren();
             foreach (GameObject obj in objects) {
                 obj.SetActive(true);
-                foreach (IWaveObject waveObject in obj.GetComponents<IWaveObject>()) {
+                foreach (IWaveObject waveObject in obj.GetComponentsInChildren<IWaveObject>()) {
+                    if (waveObject.StartLogicBeforeGameplay)
+                        continue;
+
                     waveObject.onDestroy += Enemy_OnDestroy;
                     _spawnedObjects.Add(waveObject);
                 }
@@ -72,6 +98,9 @@ namespace Gyges.Game {
         }
 
         private void Enemy_OnDestroy(IWaveObjectDestroyEventParams e) {
+            if (_waveHasEnded)
+                return;
+
             _spawnedObjects.Remove(e.waveObject);
             if (e.killedByPlayer && e.bounty > 0) {
                 gameState.PendingPoints += e.bounty;
@@ -85,11 +114,15 @@ namespace Gyges.Game {
         /// Ends this wave, if it hasn't already ended.
         /// </summary>
         public void EndWave() {
+            if (_waveHasEnded)
+                return;
+
             Destroy(gameObject);
             if (_nextManager != null) {
                 _nextManager.active = true;
                 _nextManager.BeginWave();
             }
+            _waveHasEnded = true;
         }
 
         public int ObjectCount {
@@ -99,7 +132,7 @@ namespace Gyges.Game {
         }
 
         /// <summary>
-        /// Resynchronise the object array.
+        /// Resynchronises the object array.
         /// </summary>
         public void ResynchroniseArray() {
             objects = new GameObject[transform.childCount];
@@ -184,7 +217,7 @@ namespace Gyges.Game {
             Handles.EndGUI();
         }
 
-        [MenuItem("GameObject/Gyges/Wave Manager", false, 10)]
+        [MenuItem("GameObject/Create Wave Manager", false, 0)]
         public static void CreateWaveManager(MenuCommand menuCommand) {
 
             int highestExistingWaveNumber = 0;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Gyges.Pooling;
+using Gyges.Utility;
 
 namespace Gyges.Game {
     public class EnemyFirer : MonoBehaviour {
@@ -32,6 +33,22 @@ namespace Gyges.Game {
 
         private float _timer = 0f;
         private ObjectPool _pool;
+
+        private static Transform _projectileParent = null;
+        public static Transform ProjectileParent {
+            get {
+                if (_projectileParent == null) {
+                    _projectileParent = new GameObject("--- Enemy Projectiles", typeof(EventOnDestroy)).transform;
+                    _projectileParent.GetComponent<EventOnDestroy>().onDestroy += ClearProjectileParent;
+                }
+                return _projectileParent;
+            }
+        }
+
+        public static void ClearProjectileParent() {
+            _projectileParent = null;
+        }
+
 
         void Awake() {
             _pool = ObjectPoolManager.PoolSetup(_projectilePrefab, Mathf.CeilToInt(1f/_delayBetweenShots) );
@@ -86,7 +103,7 @@ namespace Gyges.Game {
                 Projectile proj = o.GetComponent<Projectile>();
                 proj.velocity = speed;
                 proj.damage = damage;
-            });
+            }, ProjectileParent);
 
         }
 

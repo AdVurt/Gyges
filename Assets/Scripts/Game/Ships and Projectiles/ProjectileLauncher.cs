@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Gyges.Pooling;
+using Gyges.Utility;
 
 namespace Gyges.Game {
     public class ProjectileLauncher : MonoBehaviour {
@@ -14,6 +15,21 @@ namespace Gyges.Game {
         public Vector2 oscillationMaxValue = Vector2.right * 0.5f;
 
         public float oscillatedAmount = 0f;
+
+        private static Transform _projectileParent = null;
+        public static Transform ProjectileParent {
+            get {
+                if (_projectileParent == null) {
+                    _projectileParent = new GameObject("--- Player Projectiles",typeof(EventOnDestroy)).transform;
+                    _projectileParent.GetComponent<EventOnDestroy>().onDestroy += ClearProjectileParent;
+                }
+                return _projectileParent;
+            }
+        }
+
+        public static void ClearProjectileParent() {
+            _projectileParent = null;
+        }
 
         /// <summary>
         /// Fires the provided projectile formation using a single projectile prefab.
@@ -53,7 +69,7 @@ namespace Gyges.Game {
                         proj.offset = originOffset + new Vector2(loc.x, loc.y);
                     };
 
-                ObjectPoolManager.GetPool(prefabs[loc.prefabToUse]).Spawn(pos, rot, preSpawnBehaviour);
+                ObjectPoolManager.GetPool(prefabs[loc.prefabToUse]).Spawn(pos, rot, preSpawnBehaviour, ProjectileParent);
                 
             }
             roundsFired++;

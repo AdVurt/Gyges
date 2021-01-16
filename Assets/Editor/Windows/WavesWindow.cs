@@ -51,7 +51,7 @@ namespace Gyges.CustomEditors {
 
         void OnGUI() {
             
-            if (_managers.Length == 0) {
+            if (_managers.Length == 0 || EditorApplication.isPlaying) {
                 if (_wrappedLabelSkin == null)
                     _wrappedLabelSkin = new GUIStyle(GUI.skin.label) {
                         wordWrap = true,
@@ -63,6 +63,7 @@ namespace Gyges.CustomEditors {
                 return;
             }
 
+            UpdateCache();
             // If the code reaches here, there is at least one WaveManager.
             foreach(WaveManager mgr in _managers) {
                 DrawWave(mgr);
@@ -116,7 +117,7 @@ namespace Gyges.CustomEditors {
             GUIStyle style;
             switch (status) {
                 case 0:
-                    style = _plainHeader;
+                    style = manager.StartActive ? _plainHeader : EditorStyles.foldout;
                     break;
                 case 1:
                     style = _yellowHeader;

@@ -10,6 +10,7 @@ namespace Gyges.Game {
 
         public float initiationDelay = 0f;
         private bool _initiated = false;
+        public bool Initiated { get => _initiated; }
 
         [SerializeField] private Vector2 _velocity = Vector2.zero;
         public Vector2 Velocity {
@@ -22,6 +23,10 @@ namespace Gyges.Game {
         }
 
         void Update() {
+
+            if (Global.Paused || !Global.enableGameLogic)
+                return;
+
 
             if (!_initiated) {
                 initiationDelay -= Time.deltaTime;
@@ -42,20 +47,29 @@ namespace Gyges.Game {
             foreach(Transform t in transform) {
                 if (t == transform)
                     continue;
-                if (t.TryGetComponent(out IWaveObject obj)) {
-                    if (obj.IsOutOfBounds()) {
-                        Vector2 totalVelocity = Velocity + obj.Velocity;
 
-                        if ( (totalVelocity.x > 0f && t.position.x > EnemyActions.borders.xMax) ||
-                             (totalVelocity.x < 0f && t.position.x < EnemyActions.borders.xMin) ||
-                             (totalVelocity.y > 0f && t.position.y > EnemyActions.borders.yMax) ||
-                             (totalVelocity.y < 0f && t.position.y < EnemyActions.borders.yMin)
-                            )
-                        Destroy(t.gameObject);
+                bool outofBounds = false;
+                Vector2 totalVelocity = Velocity;
+                Enemy.OutOfBoundsDirections outOfBoundsDirections = Enemy.OutOfBoundsDirections.None;
+
+                foreach (IWaveObject obj in t.GetComponents<IWaveObject>()) {
+                    totalVelocity += obj.Velocity;
+                    if (obj.IsOutOfBounds(out Enemy.OutOfBoundsDirections dir)) {
+                        outofBounds = true;
+                        outOfBoundsDirections |= dir;
                     }
                 }
 
-            }
+                if (!outofBounds)
+                    continue;
+
+                if ((totalVelocity.x > 0f && (outOfBoundsDirections & Enemy.OutOfBoundsDirections.East) > 0) ||
+                    (totalVelocity.x < 0f && (outOfBoundsDirections & Enemy.OutOfBoundsDirections.West) > 0) ||
+                    (totalVelocity.y > 0f && (outOfBoundsDirections & Enemy.OutOfBoundsDirections.North) > 0) ||
+                    (totalVelocity.y < 0f && (outOfBoundsDirections & Enemy.OutOfBoundsDirections.South) > 0)
+                    )
+                    Destroy(t.gameObject);
+                }
 
             if (transform.childCount == 0)
                 Destroy(gameObject);
@@ -67,7 +81,12 @@ namespace Gyges.Game {
 
         }
 
+        public bool StartLogicBeforeGameplay { get => false; }
         public bool IsOutOfBounds() => false;
+        public bool IsOutOfBounds(out Enemy.OutOfBoundsDirections oobDir) {
+            oobDir = Enemy.OutOfBoundsDirections.None;
+            return false;
+        }
         public Transform GetTransform() => transform;
     }
 

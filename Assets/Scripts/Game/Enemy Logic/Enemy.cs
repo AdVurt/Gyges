@@ -13,8 +13,18 @@ namespace Gyges.Game {
     [RequireComponent(typeof(Collider2D))]
     public class Enemy : MonoBehaviour, IWaveObject {
 
+        [Flags]
+        public enum OutOfBoundsDirections {
+            None = 0,
+            North = 1,
+            East = 2,
+            South = 4,
+            West = 8
+        };
+
         private Collider2D _collider;
         private Ship _ship;
+        private Vector3 _meshExtents;
         private Material[] _materials;
         private static readonly int _dissolveAmountMatFloat = Shader.PropertyToID("_DissolveAmount");
         private bool _dead = false;
@@ -40,6 +50,8 @@ namespace Gyges.Game {
                 return result;
             }
         }
+
+        public bool StartLogicBeforeGameplay { get => false; }
         #endregion
 
         public Renderer[] AdditionalRenderers {
@@ -55,6 +67,7 @@ namespace Gyges.Game {
             _ship.Health = startingHealth.Value;
             _collider = GetComponent<Collider2D>();
             _materials = GetComponent<Renderer>().materials;
+            _meshExtents = Vector3.Scale(GetComponent<MeshFilter>().sharedMesh.bounds.extents, transform.lossyScale);
             _ship.OnDeath += _ship_OnDeath;
 
             if (startingHealth.Value <= 0) {
@@ -79,11 +92,24 @@ namespace Gyges.Game {
 
         #region Interface-required methods
         public bool IsOutOfBounds() {
-            if (TryGetComponent(out EnemyActions actions)) {
-                //It is assumed that any EnemyActions attached to this object will handle out-of-bounds behaviour.
-                return false;
-            }
-            return EnemyActions.borders.Contains(transform.position);
+            return IsOutOfBounds(out OutOfBoundsDirections dummy);
+        }
+
+        public bool IsOutOfBounds(out OutOfBoundsDirections oobDir) {
+            OutOfBoundsDirections outres = OutOfBoundsDirections.None;
+
+            if (transform.position.x - _meshExtents.x > EnemyActions.borders.xMax)
+                outres |= OutOfBoundsDirections.East;
+            else if (transform.position.x + _meshExtents.x < EnemyActions.borders.xMin)
+                outres |= OutOfBoundsDirections.West;
+
+            if (transform.position.y - _meshExtents.y > EnemyActions.borders.yMax)
+                outres |= OutOfBoundsDirections.North;
+            else if (transform.position.y + _meshExtents.y < EnemyActions.borders.yMin)
+                outres |= OutOfBoundsDirections.South;
+
+            oobDir = outres;
+            return outres != OutOfBoundsDirections.None;
         }
 
         public Transform GetTransform() => transform;

@@ -35,7 +35,7 @@ namespace Gyges.Pooling {
         /// Retrieves a game object from the pool, spawns it at the specified position and rotation, and returns it.
         /// </summary>
         /// <returns>The spawned object.</returns>
-        public GameObject Spawn(Vector3 position, Quaternion rotation) => Spawn(position, rotation, null);
+        public GameObject Spawn(Vector3 position, Quaternion rotation, Transform parent = null) => Spawn(position, rotation, null, parent);
 
         /// <summary>
         /// Retrieves a game object from the pool, spawns it at the specified position and rotation, takes some action before activating it, then returns it.
@@ -44,10 +44,11 @@ namespace Gyges.Pooling {
         /// <param name="rotation">The object's spawning rotation.</param>
         /// <param name="preEnableAction">Any actions that should be done to the object before activating it.</param>
         /// <returns>The spawned object.</returns>
-        public GameObject Spawn(Vector3 position, Quaternion rotation, Action<GameObject> preEnableAction) {
+        public GameObject Spawn(Vector3 position, Quaternion rotation, Action<GameObject> preEnableAction, Transform parent = null) {
             GameObject obj = Retrieve();
             obj.transform.position = position;
             obj.transform.rotation = rotation;
+            obj.transform.SetParent(parent);
             preEnableAction?.Invoke(obj);
             obj.SetActive(true);
             return obj;

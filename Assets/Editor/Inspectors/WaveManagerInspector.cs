@@ -142,7 +142,7 @@ namespace Gyges.CustomEditors {
 
             if (serializedObject.ApplyModifiedProperties() || forceSceneViewUpdate) {
                 if (EditorWindow.HasOpenInstances<WavesWindow>()) {
-                    EditorWindow.GetWindow<WavesWindow>().Repaint();
+                    EditorWindow.GetWindow<WavesWindow>("",false).Repaint();
                 }
                 SceneView.RepaintAll();
             }

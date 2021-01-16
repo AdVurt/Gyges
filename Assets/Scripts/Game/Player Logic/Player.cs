@@ -262,28 +262,35 @@ namespace Gyges.Game {
         }
 
         void Pause (InputAction.CallbackContext context) {
-            Global.Paused = true;
+            if (!Global.Paused && Global.enableGameLogic)
+                Global.Paused = true;
         }
 
         void UpdateMousePos (InputAction.CallbackContext context) {
-            _lastKnownMousePosition = _mainCam.ScreenToWorldPoint(context.ReadValue<Vector2>());
-            _lastKnownMousePosition.z = transform.position.z;
+            if (!Global.Paused && Global.enableGameLogic) {
+                _lastKnownMousePosition = _mainCam.ScreenToWorldPoint(context.ReadValue<Vector2>());
+                _lastKnownMousePosition.z = transform.position.z;
+            }
         }
 
         void UpdateGamepadStickPos (InputAction.CallbackContext context) {
-            _lastKnownInputDirection = context.ReadValue<Vector2>();
+            if (!Global.Paused && Global.enableGameLogic)
+                _lastKnownInputDirection = context.ReadValue<Vector2>();
         }
 
         void Fire (InputAction.CallbackContext context) {
-            _isFiring = true;
+            if (!Global.Paused && Global.enableGameLogic)
+                _isFiring = true;
         }
 
         void StopFire (InputAction.CallbackContext context) {
-            _isFiring = false;
+            if (!Global.Paused && Global.enableGameLogic)
+                _isFiring = false;
         }
 
         void ToggleFireMode (InputAction.CallbackContext context) {
-            AltFireMode = !AltFireMode;
+            if (!Global.Paused && Global.enableGameLogic)
+                AltFireMode = !AltFireMode;
         }
 
 

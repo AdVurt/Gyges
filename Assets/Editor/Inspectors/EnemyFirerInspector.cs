@@ -4,7 +4,7 @@ using Gyges.Game;
 
 namespace Gyges.CustomEditors {
 
-    [CustomEditor(typeof(EnemyFirer))]
+    [CustomEditor(typeof(EnemyFirer)), CanEditMultipleObjects]
     public class EnemyFirerInspector : Editor {
 
         private SerializedProperty _fireType;

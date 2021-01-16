@@ -57,6 +57,10 @@ namespace Gyges.Game {
 
         protected void Update() {
 
+            if (!Global.enableGameLogic || Global.Paused) {
+                return;
+            }
+
             if (_rotationSpeed != 0f) {
                 _velocity = _velocity.Rotate(_rotationSpeed * Time.deltaTime * timeMultiplier);
             }
@@ -105,6 +109,9 @@ namespace Gyges.Game {
         /// <returns></returns>
         protected IEnumerator SetPosition(float newPosition, bool isY, float lerpTime, bool relative) {
 
+            while (Global.Paused || !Global.enableGameLogic)
+                yield return new WaitForEndOfFrame();
+
             Vector2 startingPosition = transform.position;
             Vector2 destinationPosition = relative ? startingPosition : Vector2.zero;
             if (isY)
@@ -116,11 +123,14 @@ namespace Gyges.Game {
             float timer = 0f;
 
             while (timer < lerpTime) {
-                if (isY)
-                    transform.position = new Vector3(transform.position.x, Mathf.Lerp(startingPosition.y, destinationPosition.y, timer / lerpTime), transform.position.z);
-                else
-                    transform.position = new Vector3(Mathf.Lerp(startingPosition.x, destinationPosition.x, timer / lerpTime), transform.position.y, transform.position.z);
-                timer += Time.deltaTime;
+
+                if (!Global.Paused && Global.enableGameLogic) {
+                    if (isY)
+                        transform.position = new Vector3(transform.position.x, Mathf.Lerp(startingPosition.y, destinationPosition.y, timer / lerpTime), transform.position.z);
+                    else
+                        transform.position = new Vector3(Mathf.Lerp(startingPosition.x, destinationPosition.x, timer / lerpTime), transform.position.y, transform.position.z);
+                    timer += Time.deltaTime;
+                }
                 yield return new WaitForEndOfFrame();
             }
 
@@ -142,14 +152,20 @@ namespace Gyges.Game {
         /// <returns></returns>
         protected IEnumerator SetPosition(Vector2 newPosition, float lerpTime, bool relative) {
 
+            while (Global.Paused || !Global.enableGameLogic)
+                yield return new WaitForEndOfFrame();
+
             Vector3 startingPosition = transform.position;
             Vector3 destinationPosition = relative ? startingPosition : (Vector3.forward * transform.position.z);
             destinationPosition += (Vector3)newPosition;
 
             float timer = 0f;
             while (timer < lerpTime) {
-                transform.position = Vector3.Lerp(startingPosition, destinationPosition, timer / lerpTime);
-                timer += Time.deltaTime;
+                if (!Global.Paused && Global.enableGameLogic) {
+                    transform.position = Vector3.Lerp(startingPosition, destinationPosition, timer / lerpTime);
+                    timer += Time.deltaTime;
+                }
+                yield return new WaitForEndOfFrame();
             }
             transform.position = destinationPosition;
 
@@ -217,11 +233,11 @@ namespace Gyges.Game {
         protected static void DrawString(string text, Vector3 worldPos, Color? colour = null) {
             Handles.BeginGUI();
 
-            var restoreColor = GUI.color;
+            Color restoreColor = GUI.color;
 
             if (colour.HasValue)
                 GUI.color = colour.Value;
-            var view = SceneView.currentDrawingSceneView;
+            SceneView view = SceneView.currentDrawingSceneView;
             Vector3 screenPos = view.camera.WorldToScreenPoint(worldPos);
 
             if (screenPos.y < 0 || screenPos.y > Screen.height || screenPos.x < 0 || screenPos.x > Screen.width || screenPos.z < 0) {
@@ -250,6 +266,10 @@ namespace Gyges.Game {
         /// <param name="lerpFunc">A function that can linearly interpolate between two values of type T.</param>
         /// <param name="fadeTime">The length of time to fade the starting value into the new value.</param>
         private IEnumerator ChangeOverTime<T>(T startingValue, T value, Action<T> setter, Func<T, T, float, T> lerpFunc, float fadeTime) {
+
+            while (Global.Paused || !Global.enableGameLogic)
+                yield return new WaitForEndOfFrame();
+
             if (fadeTime == 0f) {
                 setter(value);
                 yield break;
@@ -257,8 +277,10 @@ namespace Gyges.Game {
 
             float counter = 0f;
             while (counter < fadeTime) {
-                counter += Time.deltaTime;
-                setter(lerpFunc(startingValue, value, counter / fadeTime));
+                if (!Global.Paused && Global.enableGameLogic) {
+                    counter += Time.deltaTime;
+                    setter(lerpFunc(startingValue, value, counter / fadeTime));
+                }
                 yield return new WaitForEndOfFrame();
             }
         }
