@@ -11,7 +11,6 @@ namespace Gyges.Game {
     /// Parent class for "enemy action" classes to inherit from.
     /// In order to function when inheriting from this class, OnEnable should be implemented.
     /// </summary>
-    [RequireComponent(typeof(Enemy))]
     public abstract class EnemyActions : MonoBehaviour, IVelocitySetter {
 
         public float timeMultiplier = 1f;
@@ -46,7 +45,7 @@ namespace Gyges.Game {
         }
 
         protected void Awake() {
-            _enemy = GetComponent<Enemy>();
+            TryGetComponent(out _enemy);
             _actionQueue = new Queue<QueuedEnemyAction>(_actions);
             if (selfDestructWhenDone) {
                 onFinished.AddListener(SelfDestructImmediate);
@@ -187,6 +186,14 @@ namespace Gyges.Game {
             yield break;
         }
 
+        /// <summary>
+        /// Sets the in-game UI "message" text to a given value.
+        /// </summary>
+        protected IEnumerator SetUIMessage(string message) {
+            InGameUI.SetMessage(message, 5f);
+            yield return null;
+        }
+
         protected IEnumerator ExecuteCoRt(QueuedEnemyAction action) {
             switch (action.actionType) {
                 case QueuedEnemyAction.ActionType.WaitForSeconds:
@@ -214,6 +221,9 @@ namespace Gyges.Game {
                     action.InvokeEvent();
                     yield return null;
                     break;
+                case QueuedEnemyAction.ActionType.SetMessage:
+                    yield return SetUIMessage(action.stringValues[0]);
+                    break;
                 default:
                     throw new ArgumentException("Unknown action type");
             }
@@ -224,7 +234,10 @@ namespace Gyges.Game {
         }
 
         public void SelfDestructImmediate() {
-            _enemy.Kill(false);
+            if (_enemy != null)
+                _enemy.Kill(false);
+            else
+                Destroy(gameObject);
         }
 
 #if UNITY_EDITOR

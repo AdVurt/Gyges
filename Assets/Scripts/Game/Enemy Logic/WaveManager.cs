@@ -37,6 +37,13 @@ namespace Gyges.Game {
         [HideInInspector] public bool active = false;
         [SerializeField] private EndTriggerTypes _endTriggerType = EndTriggerTypes.None;
         [SerializeField] private float _timeToWait = 5f;
+        private float _timer = 0f;
+
+        public float Timer {
+            get { return _timer; }
+        }
+
+
         public GameState gameState;
         private bool _waveHasEnded = false;
 
@@ -69,9 +76,10 @@ namespace Gyges.Game {
             if (_startActive && !active)
                 BeginWave();
 
+            _timer += Time.deltaTime;
+
             if (_endTriggerType == EndTriggerTypes.TimeBased) {
-                _timeToWait -= Time.deltaTime;
-                if (_timeToWait <= 0f) {
+                if (_timer >= _timeToWait) {
                     EndWave();
                 }
             }

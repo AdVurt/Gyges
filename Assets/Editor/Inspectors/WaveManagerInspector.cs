@@ -70,6 +70,9 @@ namespace Gyges.CustomEditors {
             }
             EditorGUILayout.PropertyField(_nextManager);
 
+            if (EditorApplication.isPlaying && _targets.Length == 1) {
+                EditorGUILayout.LabelField("Time in Wave", _targets[0].Timer.ToString());
+            }
 
 
             EditorGUILayout.Space();
@@ -99,6 +102,11 @@ namespace Gyges.CustomEditors {
                     foreach (WaveManager target in _targets) {
                         for (int i = 0; i < target.objects.Length; i++) {
                             target.objects[i].SetActive(true);
+                            if (target.objects[i].TryGetComponent(out WaveGroup gr)) {
+                                for (int j = 0; j < target.objects[i].transform.childCount; j++) {
+                                    target.objects[i].transform.GetChild(j).gameObject.SetActive(true);
+                                }
+                            }
                         }
                     }
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
@@ -110,6 +118,11 @@ namespace Gyges.CustomEditors {
                     foreach (WaveManager target in _targets) {
                         for (int i = 0; i < target.objects.Length; i++) {
                             target.objects[i].SetActive(false);
+                            if (target.objects[i].TryGetComponent(out WaveGroup gr)) {
+                                for (int j = 0; j < target.objects[i].transform.childCount; j++) {
+                                    target.objects[i].transform.GetChild(j).gameObject.SetActive(false);
+                                }
+                            }
                         }
                     }
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());

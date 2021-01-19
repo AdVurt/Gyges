@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ using TMPro;
 namespace Gyges.Game {
 
     public class InGameUI : MonoBehaviour {
+
+        private static string _message = "";
+        private static float _messageTimer = 0f;
 
         private Player _player;
         private Transform _playerTransform;
@@ -25,6 +29,7 @@ namespace Gyges.Game {
         [SerializeField] private TextMeshProUGUI _topBlackScreenText = default;
         [SerializeField] private TextMeshProUGUI _bottomBlackScreenText = default;
         [SerializeField] private Image _alertImage = default;
+        [SerializeField] private TextMeshProUGUI _messageText = default;
         // Alert Logic (0 = No alert, 1 = Raising, 2 = Lowering)
         private bool _alertPhase = false;
 
@@ -47,9 +52,12 @@ namespace Gyges.Game {
             _blackScreenImage = _blackScreen.GetComponent<Image>();
             _audioSource = GetComponent<AudioSource>();
             Global.enableGameLogic = false;
+            _messageText.text = "";
+            _messageText.color = new Color(1f,1f,1f,0f);
         }
 
         void Start() {
+            SetMessage("",0f);
             _blackScreen.SetActive(true);
             StartCoroutine(LevelIntro());
 
@@ -110,7 +118,50 @@ namespace Gyges.Game {
                     }
                     _alertImage.color = new Color(_alertImage.color.r, _alertImage.color.g, _alertImage.color.b, alpha);
                 }
+            }
 
+
+            if (_messageTimer > 0f) {
+                _messageTimer -= Time.deltaTime;
+                if (_messageTimer <= 0f) {
+                    _message = "";
+                }
+            }
+
+            // If the visual text is null:
+            if (string.IsNullOrEmpty(_messageText.text)) {
+                if (_message != "") {
+                    _messageText.text = _message;
+                }
+                else {
+                    
+                }
+            }
+            else {
+
+                Color textCol = _messageText.color;
+
+                // If there should be visual text:
+                if (_message == "") {
+                    // Fade out if necessary.
+                    if (textCol.a > 0f) {
+                        textCol.a -= Time.deltaTime;
+                        if (textCol.a < 0f) {
+                            textCol.a = 0f;
+                            _messageText.text = "";
+                        }
+                        _messageText.color = textCol;
+                    }
+                }
+                else {
+                    // Fade in if necessary.
+                    if (textCol.a < 1f) {
+                        textCol.a += Time.deltaTime;
+                        if (textCol.a > 1f)
+                            textCol.a = 1f;
+                        _messageText.color = textCol;
+                    }
+                }
 
             }
 
@@ -220,6 +271,12 @@ namespace Gyges.Game {
 
             
         }
+
+        public static void SetMessage(string message, float messageTimer) {
+            _message = message;
+            _messageTimer = messageTimer;
+        }
+
     }
 
 }

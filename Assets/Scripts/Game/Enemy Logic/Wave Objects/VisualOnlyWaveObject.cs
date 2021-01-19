@@ -7,6 +7,7 @@ namespace Gyges.Game {
 
     public class VisualOnlyWaveObject : MonoBehaviour, IWaveObject {
 
+        private bool _dead = false;
         public event Action<IWaveObjectDestroyEventParams> onDestroy;
 
         [SerializeField] private bool _startLogicBeforeGameplay = false;
@@ -42,13 +43,9 @@ namespace Gyges.Game {
                 (_velocity.y > 0f && transform.position.y - _meshExtents.y > EnemyActions.borders.yMax) ||
                 (_velocity.y < 0f && transform.position.y + _meshExtents.y < EnemyActions.borders.yMin)
                 ) {
-                Destroy(gameObject);
+                Kill();
             }
 
-        }
-
-        void OnDestroy() {
-            onDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, false, 0));
         }
 
         #region Interface required methods
@@ -71,6 +68,15 @@ namespace Gyges.Game {
             return outres != Enemy.OutOfBoundsDirections.None;
         }
         public Transform GetTransform() => transform;
+
+        public void Kill(bool killedByPlayer = false) {
+            if (_dead)
+                return;
+
+            onDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, false, 0));
+            Destroy(gameObject);
+            _dead = true;
+        }
         #endregion
 
     }

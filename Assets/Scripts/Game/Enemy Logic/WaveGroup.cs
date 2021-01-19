@@ -8,6 +8,8 @@ namespace Gyges.Game {
     public class WaveGroup : MonoBehaviour, IWaveObject {
         public event Action<IWaveObjectDestroyEventParams> onDestroy;
 
+        private bool _dead = false;
+
         public float initiationDelay = 0f;
         private bool _initiated = false;
         public bool Initiated { get => _initiated; }
@@ -18,8 +20,14 @@ namespace Gyges.Game {
             set { _velocity = value; }
         }
 
-        void OnDestroy() {
+        public void Kill(bool killedByPlayer = false) {
+            if (_dead)
+                return;
+
             onDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, false, 0));
+            Destroy(gameObject);
+            _dead = true;
+            
         }
 
         void Update() {

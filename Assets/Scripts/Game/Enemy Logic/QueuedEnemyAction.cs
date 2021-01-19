@@ -11,7 +11,8 @@ namespace Gyges.Game {
             SetRotationSpeed,
             SetPosition,
             UnityEvent,
-            Loop
+            Loop,
+            SetMessage
         };
 
         public ActionType actionType;
@@ -19,6 +20,7 @@ namespace Gyges.Game {
         public float[] floatValues;
         public Vector2[] vector2Values;
         public bool[] boolValues;
+        public string[] stringValues;
         public UnityEvent eventValue;
         public UnityEvent onFinished;
 

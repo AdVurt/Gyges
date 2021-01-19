@@ -12,6 +12,8 @@ namespace Gyges.Game {
         public float delay = 1f;
         public bool loop = true;
 
+        private bool _dead = false;
+
         public event Action<IWaveObjectDestroyEventParams> onDestroy;
 
         void OnEnable() {
@@ -20,10 +22,6 @@ namespace Gyges.Game {
             else
                 MusicManager.Play(music, delay, loop);
             Destroy(gameObject);
-        }
-
-        void OnDestroy() {
-            onDestroy?.Invoke(new IWaveObjectDestroyEventParams());
         }
 
 
@@ -50,6 +48,15 @@ namespace Gyges.Game {
 
         public Transform GetTransform() => transform;
         public bool StartLogicBeforeGameplay { get => false; }
+
+        public void Kill(bool killedByPlayer = false) {
+            if (_dead)
+                return;
+
+            onDestroy?.Invoke(new IWaveObjectDestroyEventParams(this, false, 0));
+            Destroy(gameObject);
+            _dead = true;
+        }
         #endregion
     }
 

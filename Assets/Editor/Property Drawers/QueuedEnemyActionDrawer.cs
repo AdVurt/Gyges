@@ -35,6 +35,9 @@ namespace Gyges.CustomEditors {
                 case QueuedEnemyAction.ActionType.UnityEvent:
                     height = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("eventValue")) + EditorGUIUtility.singleLineHeight;
                     break;
+                case QueuedEnemyAction.ActionType.SetMessage:
+                    height = EditorGUIUtility.singleLineHeight * 2;
+                    break;
                 default:
                     throw new System.Exception("Unknown queued enemy action type.");
             }
@@ -49,6 +52,7 @@ namespace Gyges.CustomEditors {
             SerializedProperty _floatValues = property.FindPropertyRelative("floatValues");
             SerializedProperty _vector2Values = property.FindPropertyRelative("vector2Values");
             SerializedProperty _boolValues = property.FindPropertyRelative("boolValues");
+            SerializedProperty _stringValues = property.FindPropertyRelative("stringValues");
             SerializedProperty _eventValue = property.FindPropertyRelative("eventValue");
 
             EditorGUI.BeginProperty(position, label, property);
@@ -118,6 +122,13 @@ namespace Gyges.CustomEditors {
                 case QueuedEnemyAction.ActionType.UnityEvent:
                     yPos += 2;
                     EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, EditorGUI.GetPropertyHeight(_eventValue)), _eventValue);
+                    break;
+
+                case QueuedEnemyAction.ActionType.SetMessage:
+                    if (_stringValues.arraySize != 1)
+                        _stringValues.arraySize = 1;
+                    yPos += 2;
+                    EditorGUI.PropertyField(new Rect(position.x, yPos, position.width, EditorGUIUtility.singleLineHeight), _stringValues.GetArrayElementAtIndex(0), new GUIContent("Message"));
                     break;
 
                 case QueuedEnemyAction.ActionType.Loop:

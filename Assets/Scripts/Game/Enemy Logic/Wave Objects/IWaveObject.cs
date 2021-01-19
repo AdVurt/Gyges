@@ -10,6 +10,8 @@ namespace Gyges.Game {
         bool IsOutOfBounds();
         bool IsOutOfBounds(out Enemy.OutOfBoundsDirections oobDir);
         Transform GetTransform();
+
+        void Kill(bool killedByPlayer);
     }
 
     public struct IWaveObjectDestroyEventParams {
