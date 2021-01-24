@@ -43,7 +43,6 @@ namespace Gyges.CustomEditors {
 
         public override void OnInspectorGUI() {
 
-            bool forceSceneViewUpdate = false;
             bool GUIEn = GUI.enabled;
             GUI.enabled = false;
             EditorGUILayout.PropertyField(_script);
@@ -153,11 +152,12 @@ namespace Gyges.CustomEditors {
             EditorGUILayout.LabelField("Editor Properties", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_cubeColour, new GUIContent("Playable area colour"));
 
-            if (serializedObject.ApplyModifiedProperties() || forceSceneViewUpdate) {
+            if (serializedObject.ApplyModifiedProperties()) {
                 if (EditorWindow.HasOpenInstances<WavesWindow>()) {
                     EditorWindow.GetWindow<WavesWindow>("",false).Repaint();
                 }
-                SceneView.RepaintAll();
+                if (SceneView.sceneViews[0] != null)
+                    SceneView.RepaintAll();
             }
         }
 

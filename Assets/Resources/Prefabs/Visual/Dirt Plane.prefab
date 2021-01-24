@@ -94,5 +94,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f2233f14d5511c4bbb93f202369aeb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scrollPerSecond: {x: 0, y: 3.5}
+  _scrollPerSecond: {x: 0, y: 2.75}
   _renderer: {fileID: 111680069615302149}

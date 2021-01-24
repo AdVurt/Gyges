@@ -24,6 +24,8 @@ namespace Gyges.Game {
         public bool selfDestructWhenDone = false;
         public UnityEvent onFinished;
 
+        private IOverrideOutOfBounds[] _oobOverriders;
+
         public void SetRotationSpeed(float value) {
             _rotationSpeed = value;
         }
@@ -47,6 +49,8 @@ namespace Gyges.Game {
         protected void Awake() {
             TryGetComponent(out _enemy);
             _actionQueue = new Queue<QueuedEnemyAction>(_actions);
+            _oobOverriders = GetComponents<IOverrideOutOfBounds>();
+
             if (selfDestructWhenDone) {
                 onFinished.AddListener(SelfDestructImmediate);
             }
@@ -65,15 +69,41 @@ namespace Gyges.Game {
             }
             transform.position += (Vector3)_velocity * Time.deltaTime * timeMultiplier;
 
-            //If we're out of actions and we're outside of the game borders, self destruct
-            if (_actionQueue.Count == 0 && (
-                (_velocity.x > 0f && transform.position.x > borders.xMax) ||
-                (_velocity.x < 0f && transform.position.x < borders.xMin) ||
-                (_velocity.y > 0f && transform.position.y > borders.yMax) ||
-                (_velocity.y < 0f && transform.position.y < borders.yMin)
-                )) {
-                SelfDestructImmediate();
+            // If we have anything that is set to override out-of-bounds logic, use that instead.
+            // Objects saying that we aren't out of bounds will be prioritised.
+            bool oob = true;
+            if (_oobOverriders.Length > 0) {
+
+                foreach (IOverrideOutOfBounds oobOverrider in _oobOverriders) {
+                    if (oobOverrider.IsOutOfBounds(out Enemy.OutOfBoundsDirections dir)) {
+                        if (_velocity.x > 0f && (dir & Enemy.OutOfBoundsDirections.East) > 0 ||
+                           (_velocity.x < 0f && (dir & Enemy.OutOfBoundsDirections.West) > 0) ||
+                           (_velocity.y < 0f && (dir & Enemy.OutOfBoundsDirections.South) > 0) ||
+                           (_velocity.y > 0f && (dir & Enemy.OutOfBoundsDirections.North) > 0)) {
+
+                        }
+                        else {
+                            oob = false;
+                            break;
+                        }
+                    }
+                    else {
+                        oob = false;
+                        break;
+                    }
+                }
+
             }
+            else
+                oob = _actionQueue.Count == 0 && (
+                    (_velocity.x > 0f && transform.position.x > borders.xMax) ||
+                    (_velocity.x < 0f && transform.position.x < borders.xMin) ||
+                    (_velocity.y > 0f && transform.position.y > borders.yMax) ||
+                    (_velocity.y < 0f && transform.position.y < borders.yMin)
+                );
+
+            if (oob)
+                SelfDestructImmediate();
         }
 
         /// <summary>

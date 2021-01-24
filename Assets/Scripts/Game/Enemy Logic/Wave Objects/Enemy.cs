@@ -60,6 +60,7 @@ namespace Gyges.Game {
             }
         }
 
+        public event Action onDeathAnimationStarted;
         public event Action<IWaveObjectDestroyEventParams> onDestroy;
 
         void Awake() {
@@ -78,6 +79,7 @@ namespace Gyges.Game {
 
         private void _ship_OnDeath(GameObj obj) {
             _collider.enabled = false;
+            onDeathAnimationStarted?.Invoke();
             StartCoroutine(DissolveOut());
             foreach (Enemy enemy in GetComponentsInChildren<Enemy>()) {
                 if (enemy != this)
