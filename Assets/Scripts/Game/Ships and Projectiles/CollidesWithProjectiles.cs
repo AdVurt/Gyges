@@ -19,7 +19,7 @@ namespace Gyges.Game {
 
             if (collision.gameObject.TryGetComponent(out Projectile prj)) {
 
-                if (prj.CanCollideWith(this)) {
+                if (prj.CanCollideWith(this) && Projectile.borders.Contains(collision.GetContact(0).point)) {
 
                     OnBulletHit?.Invoke(new ProjectileCollision(collision, prj));
                     prj.Hit(this);

@@ -11,7 +11,7 @@ namespace Gyges.Game {
         [HideInInspector] public float scale = 1f;
         private Vector3 _baseScale = Vector3.zero;
 
-        public static readonly Rect borders = new Rect(-20f,-10f,40f,20f);
+        public static readonly Rect borders = new Rect(WaveManager.CubeSize * -0.5f, WaveManager.CubeSize);
         [HideInInspector] public float damage = 0f;
         [HideInInspector] public uint launcherRoundsFired = 0;
         [HideInInspector] public Vector2 offset = Vector2.zero; //What offset was this projectile given? Sometimes relevant.

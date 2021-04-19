@@ -17,13 +17,15 @@ GameObject:
   - component: {fileID: 7179748076827802}
   - component: {fileID: 7179748076827803}
   - component: {fileID: 7179748076827800}
+  - component: {fileID: 5990504549628054064}
+  - component: {fileID: 117601816658636666}
   m_Layer: 12
   m_Name: Island Glowy Shooter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7179748076827801
 Transform:
   m_ObjectHideFlags: 0
@@ -217,6 +219,80 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _newModel: {fileID: 7179748600495295}
+--- !u!114 &5990504549628054064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179748076827806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00503ee65266a3648b417fc30ff9671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fireType: 3
+  _projectilePrefab: {fileID: 4106996694577673961, guid: 6c5b0368191ae4d4ca07199ef17a0e45, type: 3}
+  _delayBetweenShots: 0.5
+  _projectileBehaviour: 1
+  _direction: {x: 0, y: -1}
+  _speed: {x: 0, y: 5}
+  _damage: 7
+  _useFormation: 0
+  _projectileFormation:
+    _locs:
+    - x: 0
+      y: 0
+      speed: {x: 0, y: 15}
+      rotation: 0
+      scale: 1
+      damageMultiplier: 1
+      prefabToUse: 0
+    selectedProjectile: -1
+    guid: a72e8a5f-7dc5-46dd-a43d-a69c59ded474
+    rearWeapon: 0
+  _directionArray:
+  - {x: 0, y: -1}
+  _originOffset: {x: 0, y: 0}
+--- !u!114 &117601816658636666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179748076827806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf9d2a4ad9646346bfc966d3a8698a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 7179748076827798}
+  _materialNumber: 2
+  _materialProperty: _ColourStrength
+  minValue: 0.5
+  maxValue: 1
+  firstPulseDelay: 0
+  inactiveTime: 0.8
+  upTime: 0.8
+  downTime: 0.8
+  onMaxPulse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5990504549628054064}
+        m_TargetAssemblyTypeName: Gyges.Game.EnemyFirer, Gyges
+        m_MethodName: Fire
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onMinPulse:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7179748600495295
 GameObject:
   m_ObjectHideFlags: 0

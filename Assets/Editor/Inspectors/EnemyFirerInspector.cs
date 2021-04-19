@@ -42,10 +42,13 @@ namespace Gyges.CustomEditors {
 
             EditorGUILayout.PropertyField(_fireType);
             if (_fireType.enumValueIndex != 0) {
-                EditorGUILayout.Space();
-                EditorGUILayout.LabelField("Firing Logic", EditorStyles.boldLabel);
-                EditorGUILayout.PropertyField(_delayBetweenShots, new GUIContent("Reload Time"));
-                EditorGUILayout.PropertyField(_originOffset, new GUIContent("Origin Offset"));
+
+                if (_fireType.enumValueIndex != (int)EnemyFirer.FireType.Triggered) {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.LabelField("Firing Logic", EditorStyles.boldLabel);
+                    EditorGUILayout.PropertyField(_delayBetweenShots, new GUIContent("Reload Time"));
+                    EditorGUILayout.PropertyField(_originOffset, new GUIContent("Origin Offset"));
+                }
 
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Projectile Logic", EditorStyles.boldLabel);

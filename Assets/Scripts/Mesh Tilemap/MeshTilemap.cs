@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Gyges.Game;
 using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Gyges.MeshTilemapBuilder {
 
@@ -39,7 +42,18 @@ namespace Gyges.MeshTilemapBuilder {
             SyncUniquePositions();
             if (Application.isPlaying && renderCamera == null)
                 renderCamera = Camera.main;
+#if UNITY_EDITOR
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                EditorApplication.update += PausedUpdate;
+#endif
         }
+
+#if UNITY_EDITOR
+        void PausedUpdate() {
+            if (EditorApplication.isPaused)
+                Update();
+        }
+#endif
 
         void Update() {
 
@@ -62,6 +76,12 @@ namespace Gyges.MeshTilemapBuilder {
                 }
             }
         }
+
+#if UNITY_EDITOR
+        void OnDestroy() {
+            EditorApplication.update -= PausedUpdate;
+        }
+#endif
 
         public void SyncUniquePositions() {
             uniquePositions = new HashSet<Vector2Int>(positions);

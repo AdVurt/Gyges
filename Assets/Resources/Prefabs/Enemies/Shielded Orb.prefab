@@ -256,6 +256,11 @@ MonoBehaviour:
     useConstant: 0
     constantValue: 0
     variable: {fileID: 11400000, guid: 84222cba5bc5db144a2fa13d080b281c, type: 2}
+  lootPrefabs: []
+  lootFormation:
+    _locs: []
+    selectedLoot: 0
+    guid: 
   _dissolveSpeed: 4
   _additionalRenderers:
   - {fileID: 3407094262911230241}
@@ -310,4 +315,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdfdff9111615145b3114b1c91a024d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flashDuration: 0.1
+  _flashDuration: 0.05

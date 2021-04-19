@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 1187615001738192023}
   - component: {fileID: 1187615001738192016}
   m_Layer: 10
-  m_Name: Purple Segclaw 1
+  m_Name: Four Segment Purple Segclaw
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -695,7 +695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdfdff9111615145b3114b1c91a024d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flashDuration: 0.1
+  _flashDuration: 0.05
 --- !u!1 &1187615002024812075
 GameObject:
   m_ObjectHideFlags: 0

@@ -659,7 +659,6 @@ MonoBehaviour:
   _unselectedMaterial: {fileID: 2100000, guid: be28b748d84a2b14987ef5baabdc55a4, type: 2}
   _navigateSound: {fileID: 8300000, guid: 0a554bd933ebdf44b8b6a887776a7850, type: 3}
   _confirmSound: {fileID: 8300000, guid: 95b07e3e4c1455c4da44ae14800a282c, type: 3}
-  _cancelSound: {fileID: 8300000, guid: e9b22ecc8468f8241ae795a1212975e2, type: 3}
   _menuItems:
   - item: {fileID: 1707139267}
     itemLogic:

@@ -8,7 +8,7 @@ namespace Gyges.Game {
 
         public MaterialAutoScroll autoScroll;
 
-        public Vector2 GetVelocity() => autoScroll.GetScrollPerSecond();
+        public Vector2 GetVelocity() => autoScroll.GetScrollPerSecond() * new Vector2(1f, -1f);
 
         // Update is called once per frame
         void Update() {

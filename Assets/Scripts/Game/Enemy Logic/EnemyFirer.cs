@@ -9,7 +9,8 @@ namespace Gyges.Game {
         public enum FireType {
             None,
             Constant,
-            Burst
+            Burst,
+            Triggered
         }
 
         public enum ProjectileBehaviour {
@@ -55,7 +56,7 @@ namespace Gyges.Game {
         }
 
         void Update() {
-            if (_fireType == FireType.None || !Global.enableGameLogic || Global.Paused) {
+            if (_fireType == FireType.None || _fireType == FireType.Triggered || !Global.enableGameLogic || Global.Paused) {
                 return;
             }
 
@@ -67,7 +68,7 @@ namespace Gyges.Game {
             _timer -= Time.deltaTime;
         }
 
-        void Fire() {
+        public void Fire() { 
 
             Vector3 basePosition = transform.position + (Vector3)_originOffset;
             basePosition.z = -1f;

@@ -188,10 +188,47 @@ namespace Gyges.Game {
             UnityEventTools.AddPersistentListener(collidesWithProjectiles.OnBulletHit,enemyHitTriggers.FlashColour);
             UnityEventTools.AddPersistentListener(collidesWithProjectiles.OnBulletHit,enemy.TakeDamageFromCollision);
 
+            if (Selection.activeTransform != null) {
+                go.transform.SetParent(Selection.activeTransform);
+                go.transform.localPosition = Vector3.zero;
+            }
+
             Undo.RegisterCreatedObjectUndo(go, "Create Enemy");
             Selection.activeObject = go;
         }
 
+        [MenuItem("GameObject/Create Default Background Enemy", false, 0)]
+        public static void CreateBlankBackgroundEnemy(MenuCommand menuCommand) {
+
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = "New Background Enemy";
+            go.tag = "Enemy";
+            go.layer = LayerMask.NameToLayer("Enemy Ground Ships");
+            DestroyImmediate(go.GetComponent<BoxCollider>());
+            go.AddComponent<BoxCollider2D>();
+            go.AddComponent<Rigidbody2D>();
+            Ship ship = go.AddComponent<Ship>();
+            Enemy enemy = go.AddComponent<Enemy>();
+            CollidesWithProjectiles collidesWithProjectiles = go.AddComponent<CollidesWithProjectiles>();
+            EnemyHitTriggers enemyHitTriggers = go.AddComponent<EnemyHitTriggers>();
+            Rigidbody2D rigidbody2D = go.GetComponent<Rigidbody2D>();
+
+            go.GetComponent<Renderer>().sharedMaterial = Resources.Load<Material>("Materials/EnemyShip");
+            ship.teams = Ship.Teams.Enemy;
+            collidesWithProjectiles.OnBulletHit = new ProjectileCollisionEvent();
+            rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            rigidbody2D.gravityScale = 0f;
+            UnityEventTools.AddPersistentListener(collidesWithProjectiles.OnBulletHit, enemy.TakeDamageFromCollision);
+
+            if (Selection.activeTransform != null) {
+                go.transform.SetParent(Selection.activeTransform);
+                go.transform.localPosition = Vector3.zero;
+            }
+
+            Undo.RegisterCreatedObjectUndo(go, "Create Enemy");
+            Selection.activeObject = go;
+
+        }
 #endif
 
     }

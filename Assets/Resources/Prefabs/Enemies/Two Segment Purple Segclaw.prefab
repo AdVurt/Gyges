@@ -461,4 +461,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdfdff9111615145b3114b1c91a024d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flashDuration: 0.1
+  _flashDuration: 0.05
